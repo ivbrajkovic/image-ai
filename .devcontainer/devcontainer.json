@@ -23,5 +23,32 @@
   "mounts": [
     "source=global-pnpm-store,target=${containerWorkspaceFolder}/.pnpm-store,type=volume"
   ],
-  "runArgs": ["--name", "image-ai"]
+  "runArgs": ["--name", "image-ai"],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "aaron-bond.better-comments",
+        "mikestead.dotenv",
+        "hediet.vscode-drawio",
+        "dsznajder.es7-react-js-snippets",
+        "PKief.material-icon-theme",
+        "johnpapa.winteriscoming",
+        "dbaeumer.vscode-eslint",
+        "Gruntfuggly.todo-tree",
+        "meganrogge.template-string-converter",
+        "austenc.tailwind-docs",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "christian-kohler.path-intellisense",
+        "christian-kohler.npm-intellisense",
+        "bradgashler.htmltagwrap",
+        "heybourn.headwind",
+        "mhutchie.git-graph",
+        "pomber.git-file-history",
+        "WallabyJs.console-ninja",
+        "streetsidesoftware.code-spell-checker",
+        "formulahendry.auto-rename-tag"
+      ]
+    }
+  }
 }
