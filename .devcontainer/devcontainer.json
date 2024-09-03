@@ -53,7 +53,7 @@
     "source=global-pnpm-store,target=${containerWorkspaceFolder}/.pnpm-store,type=volume"
   ],
 
-  "postCreateCommand": "sudo chown node .pnpm-store",
+  "postCreateCommand": "sudo chown node .pnpm-store && pnpm c set store-dir .pnpm-store",
 
   "runArgs": ["--name", "image-ai"]
 }
