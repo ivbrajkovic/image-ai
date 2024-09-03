@@ -1,5 +1,9 @@
-import Image from 'next/image';
+import { ModeToggle } from '@/components/ui/mode-toggle';
 
 export default function Home() {
-  return <main className=''></main>;
+  return (
+    <main>
+      <ModeToggle />
+    </main>
+  );
 }
