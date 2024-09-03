@@ -49,11 +49,14 @@
   // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
   "remoteUser": "node",
 
+  // Add the global pnpm store as a volume
   "mounts": [
     "source=global-pnpm-store,target=${containerWorkspaceFolder}/.pnpm-store,type=volume"
   ],
 
+  // Add node user permissions to the pnpm store and set the store directory
   "postCreateCommand": "sudo chown node .pnpm-store && pnpm c set store-dir .pnpm-store",
 
+  // Set container name
   "runArgs": ["--name", "image-ai"]
 }
