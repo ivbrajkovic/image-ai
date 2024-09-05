@@ -38,8 +38,7 @@ export const UploadImage = () => {
     >
       <CardContent className='flex flex-col h-full items-center justify-center px-2 py-24 text-xs'>
         <input {...getInputProps()} />
-        <div className='flex flex-col items-center gap-4'>
-          <h1>Cool animation</h1>
+        <div className='flex flex-col items-center gap-2'>
           <p className='text-muted-foreground text-2xl'>
             {isDragActive
               ? 'Drop the files here ...'

@@ -1,9 +1,10 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import './globals.css';
+import type { Metadata } from 'next';
+// import { cookies } from 'next/headers';
+import { Inter } from 'next/font/google';
 import { ThemeProvider } from '@/theme/theme-provider';
-import { StoreProvider } from '@/store/store-provider';
 import { cn } from '@/lib/utils';
+import { StoreProvider } from '@/store/StoreProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -17,22 +18,25 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // const cookieStore = cookies();
+  // console.log('*** cookieStore ***', cookieStore);
+
   return (
     <html
       lang='en'
       suppressHydrationWarning
     >
       <body className={cn(inter.className, 'h-full')}>
-        {/* <StoreProvider> */}
-        <ThemeProvider
-          enableSystem
-          disableTransitionOnChange
-          attribute='class'
-          defaultTheme='system'
-        >
-          {children}
-        </ThemeProvider>
-        {/* </StoreProvider> */}
+        <StoreProvider>
+          <ThemeProvider
+            enableSystem
+            disableTransitionOnChange
+            attribute='class'
+            defaultTheme='system'
+          >
+            {children}
+          </ThemeProvider>
+        </StoreProvider>
       </body>
     </html>
   );

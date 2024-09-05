@@ -1,5 +1,5 @@
-import { Editor } from '@/components/editor/editor';
-import { ModeToggle } from '@/components/ui/mode-toggle';
+import { ModeToggle } from '@/components/mode-toggle';
+import { Editor } from '@/features/editor/editor';
 
 export default function Home() {
   return (

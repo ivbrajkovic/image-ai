@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["CLOUDINARY", "clsx", "reduxjs", "tailwindcss", "webp"]
+  "cSpell.words": [
+    "CLOUDINARY",
+    "clsx",
+    "persistor",
+    "reduxjs",
+    "tailwindcss",
+    "webp"
+  ]
 }
