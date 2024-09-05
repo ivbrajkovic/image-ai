@@ -1,24 +1,32 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { UploadImage } from '@/features/editor/component/upload-image';
-import { selectGenerating, setGenerating } from '@/features/editor/editorSlice';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { UploadImage } from '@/features/editor/component/UploadImage';
+import { ImageStore, useImageStore } from '@/features/editor/imageStore';
 
-export const Editor = () => {
-  const dispatch = useAppDispatch();
-  const generating = useAppSelector(selectGenerating);
+const TestButton = () => {
+  const generating = useImageStore((state) => state.generating);
+  const setGenerating = useImageStore((state) => state.setGenerating);
 
-  const handleSave = () => {
-    dispatch(setGenerating(!generating));
+  const handleClick = () => {
+    setGenerating(!generating);
   };
 
   return (
     <div>
-      <Button onClick={handleSave}>Save</Button>
       <h1>{generating ? 'generating' : 'not generating'}</h1>
-
-      <UploadImage />
+      <Button onClick={handleClick}>Set Generating</Button>
     </div>
+  );
+};
+
+export const Editor = () => {
+  return (
+    <ImageStore.Provider>
+      <div>
+        <UploadImage />
+        <TestButton />
+      </div>
+    </ImageStore.Provider>
   );
 };

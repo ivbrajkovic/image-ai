@@ -2,9 +2,11 @@
   "cSpell.words": [
     "CLOUDINARY",
     "clsx",
+    "immer",
     "persistor",
     "reduxjs",
     "tailwindcss",
-    "webp"
+    "webp",
+    "zustand"
   ]
 }
