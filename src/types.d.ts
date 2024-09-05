@@ -4,5 +4,6 @@ namespace NodeJS {
     CLOUDINARY_KEY: string;
     CLOUDINARY_SECRET: string;
     CLOUDINARY_URL: string;
+    CLOUDINARY_UPLOAD_PRESET: string;
   }
 }

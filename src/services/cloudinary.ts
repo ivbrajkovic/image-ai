@@ -28,7 +28,7 @@ export class Cloudinary {
       const buffer = Buffer.from(arrayBuffer);
 
       const uploadStream = this.#cloudinary.uploader.upload_stream(
-        { upload_preset: process.env.CLOUDINARY_NAME },
+        { upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET },
         (error, result) => {
           if (error || !result)
             return reject({ error: 'Something went wrong!' });
