@@ -1,10 +1,10 @@
 'use client';
 
+import { useDropzone } from 'react-dropzone';
+
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { uploadImageAction } from '@/server/upload-image-action';
-import { useEffect, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
 
 export const UploadImage = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -38,7 +38,7 @@ export const UploadImage = () => {
     >
       <CardContent className='flex flex-col h-full items-center justify-center px-2 py-24 text-xs'>
         <input {...getInputProps()} />
-        <div className='flex flex-col items-center gap-2'>
+        <div className='flex flex-col items-center justify-center gap-4'>
           <p className='text-muted-foreground text-2xl'>
             {isDragActive
               ? 'Drop the files here ...'

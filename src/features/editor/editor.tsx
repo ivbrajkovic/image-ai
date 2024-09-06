@@ -2,11 +2,12 @@
 
 import { Button } from '@/components/ui/button';
 import { UploadImage } from '@/features/editor/component/UploadImage';
-import { ImageStore, useImageStore } from '@/features/editor/imageStore';
+import { ImageStore } from '@/features/editor/store/imageStore';
+import { LayerStore } from '@/features/editor/store/layerStore';
 
 const TestButton = () => {
-  const generating = useImageStore((state) => state.generating);
-  const setGenerating = useImageStore((state) => state.setGenerating);
+  const generating = ImageStore.useStore((state) => state.generating);
+  const setGenerating = ImageStore.useStore((state) => state.setGenerating);
 
   const handleClick = () => {
     setGenerating(!generating);
@@ -22,11 +23,26 @@ const TestButton = () => {
 
 export const Editor = () => {
   return (
-    <ImageStore.Provider>
-      <div>
-        <UploadImage />
-        <TestButton />
-      </div>
-    </ImageStore.Provider>
+    <LayerStore.Provider
+      initial={{
+        layers: [
+          {
+            id: crypto.randomUUID(),
+            publicId: '',
+            url: '',
+            width: 0,
+            height: 0,
+          },
+        ],
+        layerComparisonMode: false,
+      }}
+    >
+      <ImageStore.Provider initial={{ generating: false }}>
+        <div>
+          <UploadImage />
+          <TestButton />
+        </div>
+      </ImageStore.Provider>
+    </LayerStore.Provider>
   );
 };

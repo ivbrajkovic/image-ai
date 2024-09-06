@@ -1,24 +1,49 @@
-import React, { createContext, PropsWithChildren, useState } from 'react';
+import React, {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useRef,
+} from 'react';
 import { StoreApi, useStore as useZustandStore } from 'zustand';
 
-export const createZustandContext = <TInitial, TState extends StoreApi<any>>(
-  createStore: () => TState,
+type ExtractState<S> = S extends {
+  getState: () => infer T;
+}
+  ? T
+  : never;
+
+type ProviderProps<TInitial> = PropsWithChildren<{
+  initial: TInitial;
+}>;
+
+export const createZustandContext = <
+  TInitial,
+  TStore extends StoreApi<unknown>,
+>(
+  createStore: (initial: TInitial) => TStore,
 ) => {
-  const Context = createContext<TState | null>(null);
+  const Context = createContext<TStore | null>(null);
 
-  const Provider = (props: PropsWithChildren) => {
-    const [store] = useState(createStore);
-    return <Context.Provider value={store}>{props.children}</Context.Provider>;
+  const Provider = (props: ProviderProps<TInitial>) => {
+    const storeRef = useRef<TStore>();
+    if (!storeRef.current) storeRef.current = createStore(props.initial);
+    return (
+      <Context.Provider value={storeRef.current}>
+        {props.children}
+      </Context.Provider>
+    );
   };
 
-  const useContext = () => {
-    const contextValue = React.useContext(Context);
-    if (contextValue === null)
-      throw new Error(
-        `useContext must be used within a Zustand store Provider`,
-      );
-    return contextValue;
-  };
+  type TState = ExtractState<TStore>;
 
-  return { useContext, Context, Provider };
+  function useStore(): TState;
+  function useStore<T>(selector: (state: TState) => T): T;
+  function useStore<T>(selector?: (state: TState) => T) {
+    const store = useContext(Context);
+    if (store === null)
+      throw new Error(`useStore must be used within a Zustand store Provider`);
+    return useZustandStore(store, selector!);
+  }
+
+  return { useStore, Context, Provider };
 };
