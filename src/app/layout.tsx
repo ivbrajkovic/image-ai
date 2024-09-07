@@ -2,8 +2,9 @@ import './globals.css';
 import type { Metadata } from 'next';
 // import { cookies } from 'next/headers';
 import { Inter } from 'next/font/google';
-import { ThemeProvider } from '@/theme/theme-provider';
+
 import { cn } from '@/lib/utils';
+import { ThemeProvider } from '@/theme/theme-provider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,16 +19,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang='en'
-      suppressHydrationWarning
-    >
+    <html lang="en" suppressHydrationWarning>
       <body className={cn(inter.className, 'h-full')}>
         <ThemeProvider
           enableSystem
           disableTransitionOnChange
-          attribute='class'
-          defaultTheme='system'
+          attribute="class"
+          defaultTheme="system"
         >
           {children}
         </ThemeProvider>

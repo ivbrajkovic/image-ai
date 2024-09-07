@@ -1,8 +1,9 @@
 'use server';
 
 import { z } from 'zod';
-import { Cloudinary } from '@/services/cloudinary';
+
 import { actionClient } from '@/lib/safe-action';
+import { Cloudinary } from '@/services/cloudinary';
 
 const formData = z
   .object({ formData: z.instanceof(FormData) })
@@ -13,7 +14,7 @@ const formData = z
     // .safeParse(Object.fromEntries(formData));
   });
 
-const handleError = (error: any) => ({ error });
+const handleError = (error: unknown) => ({ error });
 
 export const uploadImageAction = actionClient
   .schema(formData)
