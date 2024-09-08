@@ -1,11 +1,14 @@
-import { ModeToggle } from '@/components/mode-toggle';
+'use client';
+
 import { Editor } from '@/features/editor/editor';
+import { StoreProvider } from '@/features/editor/store/store-provider';
 
 export default function Home() {
   return (
-    <main>
-      <ModeToggle />
-      <Editor />
-    </main>
+    <StoreProvider>
+      <main className="h-full">
+        <Editor />
+      </main>
+    </StoreProvider>
   );
 }

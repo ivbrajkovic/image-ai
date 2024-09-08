@@ -1,9 +1,5 @@
 import { UploadApiResponse, v2 } from 'cloudinary';
 
-type UploadResult =
-  | { success: UploadApiResponse; error?: never }
-  | { error: string; success?: never };
-
 export class Cloudinary {
   static #instance: Cloudinary;
   #cloudinary: typeof v2;
@@ -22,17 +18,27 @@ export class Cloudinary {
     });
   }
 
-  uploadImage(file: File): Promise<UploadResult> {
-    return new Promise<UploadResult>(async (resolve, reject) => {
+  uploadImage(file: File) {
+    return new Promise<UploadApiResponse>(async (resolve, reject) => {
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
       const uploadStream = this.#cloudinary.uploader.upload_stream(
         { upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET },
         (error, result) => {
-          if (error || !result)
-            return reject({ error: 'Something went wrong!' });
-          return resolve({ success: result });
+          if (error) {
+            const errorMessage = `Image upload failed: ${error?.message}`;
+            console.error(errorMessage, error);
+            return reject(new Error(errorMessage));
+          }
+
+          if (!result) {
+            const errorMessage = 'Image upload failed: No result received';
+            console.error(errorMessage);
+            return reject(new Error(errorMessage));
+          }
+
+          return resolve(result);
         },
       );
 

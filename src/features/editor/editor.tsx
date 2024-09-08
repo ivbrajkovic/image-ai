@@ -1,28 +1,15 @@
 'use client';
 
-import { UploadImage } from '@/features/editor/component/UploadImage';
-import { ImageStore } from '@/features/editor/store/imageStore';
-import { LayerStore } from '@/features/editor/store/layerStore';
+import { Layers } from '@/features/editor/component/layers/layers';
+import { ToolSidebar } from '@/features/editor/component/tool-sidebar';
+import { ImageView } from '@/features/editor/view/image-view';
 
 export const Editor = () => {
   return (
-    <ImageStore.Provider initial={{ generating: false }}>
-      <LayerStore.Provider
-        initial={{
-          layerComparisonMode: false,
-          layers: [
-            {
-              id: crypto.randomUUID(),
-              publicId: '',
-              url: '',
-              width: 0,
-              height: 0,
-            },
-          ],
-        }}
-      >
-        <UploadImage />
-      </LayerStore.Provider>
-    </ImageStore.Provider>
+    <div className="grid h-full grid-cols-[240px_1fr_360px]">
+      <ToolSidebar />
+      <ImageView />
+      <Layers />
+    </div>
   );
 };

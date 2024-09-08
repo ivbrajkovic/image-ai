@@ -31,7 +31,8 @@
         "pomber.git-file-history",
         "WallabyJs.console-ninja",
         "streetsidesoftware.code-spell-checker",
-        "formulahendry.auto-rename-tag"
+        "formulahendry.auto-rename-tag",
+        "heybourn.headwind"
       ]
     }
   },

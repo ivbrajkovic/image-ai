@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { ImageStore } from '@/features/editor/store/imageStore';
+import { ImageStore } from '@/features/editor/store/image-store';
 
 export const TestButton = () => {
   const generating = ImageStore.useStore((state) => state.generating);
