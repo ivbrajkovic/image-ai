@@ -1,4 +1,13 @@
 import { UploadApiResponse, v2 } from 'cloudinary';
+import pipe from 'lodash/fp/pipe';
+
+import {
+  canFetchFromUrl,
+  createGenerator,
+  withInterval,
+  withRetrial,
+} from '@/utils/generators';
+import { errorResult, successResult } from '@/utils/result';
 
 export type UploadImageProps = { image: File };
 export type GetRemoveProps = { prompt: string; activeImageUrl: string };
@@ -49,12 +58,22 @@ export class Cloudinary {
     });
   }
 
-  genRemove(props: GetRemoveProps) {
+  async genRemove(props: GetRemoveProps) {
     const parts = props.activeImageUrl.split('/upload/');
     const removeUrl = `${parts[0]}/upload/e_gen_remove:${props.prompt}/${parts[1]}`;
 
-    
+    const pipeline = pipe(
+      createGenerator(canFetchFromUrl),
+      withInterval(500),
+      withRetrial(5),
+    );
 
-    return Promise.resolve();
+    for await (const result of pipeline('https://example.com')) {
+      if (result instanceof Error)
+        return errorResult(`Image processing failed: ${result.message}.`);
+      if (result) return successResult({ url: removeUrl });
+    }
+
+    return errorResult('Image processing failed: Max retries exceeded.');
   }
 }
