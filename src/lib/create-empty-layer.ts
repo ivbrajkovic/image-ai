@@ -1,4 +1,4 @@
-import { Layer } from '@/features/editor/store/layers-store';
+import { Layer } from '@/components/layers-bar/layers-store';
 
 export const createEmptyLayer = (): Layer => ({
   id: crypto.randomUUID(),

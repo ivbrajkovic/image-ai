@@ -12,6 +12,6 @@ const schema = zfd.formData({
 export const uploadImageAction = actionClient
   .metadata({ actionName: 'uploadImage' })
   .schema(schema)
-  .action(({ parsedInput: { image } }) => {
-    return Cloudinary.instance.uploadImage(image);
+  .action(({ parsedInput }) => {
+    return Cloudinary.instance.uploadImage(parsedInput);
   });

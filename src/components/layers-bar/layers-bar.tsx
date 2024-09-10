@@ -2,6 +2,9 @@
 
 import { Layers2 } from 'lucide-react';
 
+import { LayerImage } from '@/components/layers-bar/components/layer-image';
+import { LayerInfo } from '@/components/layers-bar/components/layer-info';
+import { LayersStore } from '@/components/layers-bar/layers-store';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -10,14 +13,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { LayerImage } from '@/features/editor/component/layers/layer-image';
-import { LayerInfo } from '@/features/editor/component/layers/layer-info';
-import { ImageStore } from '@/features/editor/store/image-store';
-import { LayersStore } from '@/features/editor/store/layers-store';
 import { createEmptyLayer } from '@/lib/create-empty-layer';
 import { cn } from '@/lib/utils';
+import { ImageStore } from '@/store/image-store';
 
-export const Layers = () => {
+export const LayersBar = () => {
   const generating = ImageStore.useStore((state) => state.generating);
   const layers = LayersStore.useStore((state) => state.layers);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
@@ -30,17 +30,15 @@ export const Layers = () => {
 
   return (
     <Card className="relative flex flex-col overflow-x-hidden overflow-y-scroll shadow-2xl scrollbar-thin scrollbar-track-secondary scrollbar-thumb-primary scrollbar-track-rounded-full  scrollbar-thumb-rounded-full">
-      <CardHeader className="">
-        <div>
-          <CardTitle className="text-sm">
-            {activeLayer.name ?? 'Layers'}
-          </CardTitle>
-          {activeLayer.width && activeLayer.height ? (
-            <CardDescription className="text-xs">
-              {activeLayer.width} x {activeLayer.height}
-            </CardDescription>
-          ) : null}
-        </div>
+      <CardHeader className="sticky top-0 z-50 min-h-24 bg-card p-4 shadow-sm">
+        <CardTitle className="text-sm">
+          {activeLayer.name || 'Layers'}
+        </CardTitle>
+        {activeLayer.width && activeLayer.height ? (
+          <CardDescription className="text-xs">
+            {activeLayer.width} x {activeLayer.height}
+          </CardDescription>
+        ) : null}
       </CardHeader>
       <CardContent className="flex flex-1 flex-col">
         {layers.map((layer, index) => (
@@ -61,24 +59,21 @@ export const Layers = () => {
                   <p className="justify-self-end text-sm font-medium">
                     New Layer
                   </p>
-                ) : (
-                  <>
-                    <LayerImage
-                      url={layer.url}
-                      name={layer.name}
-                      poster={layer.poster}
-                      format={layer.format}
-                    />
-                    <LayerInfo
-                      id={layer.id}
-                      name={layer.name}
-                      format={layer.format}
-                      width={layer.width}
-                      height={layer.height}
-                      index={index}
-                    />
-                  </>
-                )}
+                ) : null}
+                <LayerImage
+                  url={layer.url}
+                  name={layer.name}
+                  poster={layer.poster}
+                  format={layer.format}
+                />
+                <LayerInfo
+                  id={layer.id}
+                  name={layer.name}
+                  format={layer.format}
+                  width={layer.width}
+                  height={layer.height}
+                  index={index}
+                />
               </div>
             </div>
           </div>

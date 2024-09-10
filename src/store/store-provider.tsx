@@ -2,9 +2,9 @@
 
 import { PropsWithChildren } from 'react';
 
-import { ImageStore } from '@/features/editor/store/image-store';
-import { LayersStore } from '@/features/editor/store/layers-store';
+import { LayersStore } from '@/components/layers-bar/layers-store';
 import { createEmptyLayer } from '@/lib/create-empty-layer';
+import { ImageStore } from '@/store/image-store';
 
 export const StoreProvider = (props: PropsWithChildren) => {
   return (

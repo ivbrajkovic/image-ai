@@ -1,15 +1,15 @@
 import Image from 'next/image';
 
-import { ImageStore } from '@/features/editor/store/image-store';
-import { Layer, LayersStore } from '@/features/editor/store/layers-store';
+import { Layer, LayersStore } from '@/components/layers-bar/layers-store';
 import { cn } from '@/lib/utils';
+import { ImageStore } from '@/store/image-store';
 
 type ActiveImageProps = Layer & {
   generating: boolean;
 };
 
 const ActiveLayer = (props: ActiveImageProps) => (
-  <div>
+  <div className="relative flex size-full items-center justify-center">
     {props.resourceType === 'image' ? (
       <Image
         fill
@@ -34,13 +34,12 @@ const ActiveLayer = (props: ActiveImageProps) => (
 
 export const ActiveImage = () => {
   const generating = ImageStore.useStore((state) => state.generating);
-  const layers = LayersStore.useStore((state) => state.layers);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
 
   if (!activeLayer.url) return null;
 
   return (
-    <div className="relative flex h-svh w-full flex-col items-center justify-center bg-secondary p-24">
+    <div className="h-svh bg-secondary p-24">
       <ActiveLayer {...activeLayer} generating={generating} />
     </div>
   );

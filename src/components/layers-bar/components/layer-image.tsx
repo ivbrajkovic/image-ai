@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-import { Layer } from '@/features/editor/store/layers-store';
+import { Layer } from '@/components/layers-bar/layers-store';
 
 type LayerImageProps = Pick<Layer, 'url' | 'name' | 'format' | 'poster'>;
 
@@ -14,13 +14,13 @@ export const LayerImage = ({ url, name, format, poster }: LayerImageProps) => {
   const formatText = `${name.slice(0, 15)}.${format}`;
 
   return (
-    <div className="flex size-12 items-center gap-2">
+    <div className="flex items-center gap-4">
       <Image
         src={imageSrc}
         alt={name}
-        width={50}
-        height={50}
-        className="size-full rounded-sm object-contain"
+        width={36}
+        height={36}
+        className="rounded-sm object-contain"
       />
       <div>
         <p className="text-sm">{formatText}</p>

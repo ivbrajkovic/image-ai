@@ -2,15 +2,15 @@
 
 import { Ellipsis, Trash2 } from 'lucide-react';
 
+import { Layer, LayersStore } from '@/components/layers-bar/layers-store';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogTitle,
+  // DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Layer, LayersStore } from '@/features/editor/store/layers-store';
 
 type LayersInfoProps = Pick<
   Layer,
@@ -30,11 +30,12 @@ export const LayerInfo = (props: LayersInfoProps) => {
 
     e.stopPropagation();
     setActiveLayer(props.index === 0 ? layers[1]?.id : layers[0]?.id);
+    removeLayer(props.id);
   };
 
   return (
     <Dialog>
-      <DialogTitle>Layer Info</DialogTitle>
+      {/* <DialogTitle>Layer Info</DialogTitle> */}
       <DialogTrigger>
         <Ellipsis size={14} />
       </DialogTrigger>

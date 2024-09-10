@@ -1,5 +1,8 @@
 import { UploadApiResponse, v2 } from 'cloudinary';
 
+export type UploadImageProps = { image: File };
+export type GetRemoveProps = { prompt: string; activeImageUrl: string };
+
 export class Cloudinary {
   static #instance: Cloudinary;
   #cloudinary: typeof v2;
@@ -18,9 +21,9 @@ export class Cloudinary {
     });
   }
 
-  uploadImage(file: File) {
+  uploadImage(props: UploadImageProps) {
     return new Promise<UploadApiResponse>(async (resolve, reject) => {
-      const arrayBuffer = await file.arrayBuffer();
+      const arrayBuffer = await props.image.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
       const uploadStream = this.#cloudinary.uploader.upload_stream(
@@ -44,5 +47,14 @@ export class Cloudinary {
 
       uploadStream.end(buffer);
     });
+  }
+
+  genRemove(props: GetRemoveProps) {
+    const parts = props.activeImageUrl.split('/upload/');
+    const removeUrl = `${parts[0]}/upload/e_gen_remove:${props.prompt}/${parts[1]}`;
+
+    
+
+    return Promise.resolve();
   }
 }

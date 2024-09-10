@@ -1,13 +1,17 @@
 'use client';
 
-import { Editor } from '@/features/editor/editor';
-import { StoreProvider } from '@/features/editor/store/store-provider';
+import { Editor } from '@/components/editor/editor';
+import { LayersBar } from '@/components/layers-bar/layers-bar';
+import { ToolBar } from '@/components/tool-bar/toolbar';
+import { StoreProvider } from '@/store/store-provider';
 
 export default function Home() {
   return (
     <StoreProvider>
-      <main className="h-full">
+      <main className="grid h-full grid-cols-[240px_1fr_360px]">
+        <ToolBar />
         <Editor />
+        <LayersBar />
       </main>
     </StoreProvider>
   );

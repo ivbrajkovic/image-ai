@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { UploadImage } from '@/features/editor/component/upload/upload-image';
+import { UploadImage } from '@/components/editor/component/upload-image';
 
 type FormType = 'image' | 'video';
 
