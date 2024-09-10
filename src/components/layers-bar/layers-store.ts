@@ -2,10 +2,10 @@ import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { createStore } from 'zustand/vanilla';
 
-import { createZustandContext } from '@/lib/createZustandContext';
+import { createZustandContext } from '@/lib/create-zustand-context';
 
-type Layer = {
-  id?: string;
+export type Layer = {
+  id: string;
   publicId?: string;
   width?: number;
   height?: number;
@@ -26,7 +26,7 @@ export type LayerActions = {
   addLayer: (layer: Layer) => void;
   removeLayer: (id: string) => void;
   updateLayer: (layer: Layer) => void;
-  setActiveLayerId: (id: string) => void;
+  setActiveLayer: (id: string) => void;
   setPoster: (id: string, posterUrl: string) => void;
   setTranscriptionUrl: (id: string, transcriptionUrl: string) => void;
   setLayerComparisonMode: (mode: boolean) => void;
@@ -64,7 +64,7 @@ const createLayerStore = (initialState: {
             state.layers[index] = layer;
           }),
 
-        setActiveLayerId: (id) =>
+        setActiveLayer: (id) =>
           set((state) => {
             const layer = state.layers.find((layer) => layer.id === id);
             state.activeLayer = layer ?? state.layers[0];
@@ -107,4 +107,4 @@ const createLayerStore = (initialState: {
   );
 };
 
-export const LayerStore = createZustandContext(createLayerStore);
+export const LayersStore = createZustandContext(createLayerStore);

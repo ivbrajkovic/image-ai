@@ -1,11 +1,18 @@
-import { ModeToggle } from '@/components/mode-toggle';
-import { Editor } from '@/features/editor/editor';
+'use client';
+
+import { Editor } from '@/components/editor/editor';
+import { LayersBar } from '@/components/layers-bar/layers-bar';
+import { ToolBar } from '@/components/tool-bar/toolbar';
+import { StoreProvider } from '@/store/store-provider';
 
 export default function Home() {
   return (
-    <main>
-      <ModeToggle />
-      <Editor />
-    </main>
+    <StoreProvider>
+      <main className="grid h-full grid-cols-[240px_1fr_360px]">
+        <ToolBar />
+        <Editor />
+        <LayersBar />
+      </main>
+    </StoreProvider>
   );
 }

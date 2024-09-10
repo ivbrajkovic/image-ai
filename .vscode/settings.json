@@ -2,6 +2,7 @@
   "cSpell.words": [
     "CLOUDINARY",
     "clsx",
+    "Fetchable",
     "immer",
     "persistor",
     "reduxjs",

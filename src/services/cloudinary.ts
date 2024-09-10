@@ -1,8 +1,16 @@
 import { UploadApiResponse, v2 } from 'cloudinary';
+import pipe from 'lodash/fp/pipe';
 
-type UploadResult =
-  | { success: UploadApiResponse; error?: never }
-  | { error: string; success?: never };
+import {
+  canFetchFromUrl,
+  createGenerator,
+  withInterval,
+  withRetrial,
+} from '@/utils/generators';
+import { errorResult, successResult } from '@/utils/result';
+
+export type UploadImageProps = { image: File };
+export type GetRemoveProps = { prompt: string; activeImageUrl: string };
 
 export class Cloudinary {
   static #instance: Cloudinary;
@@ -22,21 +30,50 @@ export class Cloudinary {
     });
   }
 
-  uploadImage(file: File): Promise<UploadResult> {
-    return new Promise<UploadResult>(async (resolve, reject) => {
-      const arrayBuffer = await file.arrayBuffer();
+  uploadImage(props: UploadImageProps) {
+    return new Promise<UploadApiResponse>(async (resolve, reject) => {
+      const arrayBuffer = await props.image.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
 
       const uploadStream = this.#cloudinary.uploader.upload_stream(
         { upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET },
         (error, result) => {
-          if (error || !result)
-            return reject({ error: 'Something went wrong!' });
-          return resolve({ success: result });
+          if (error) {
+            const errorMessage = `Image upload failed: ${error?.message}`;
+            console.error(errorMessage, error);
+            return reject(new Error(errorMessage));
+          }
+
+          if (!result) {
+            const errorMessage = 'Image upload failed: No result received';
+            console.error(errorMessage);
+            return reject(new Error(errorMessage));
+          }
+
+          return resolve(result);
         },
       );
 
       uploadStream.end(buffer);
     });
+  }
+
+  async genRemove(props: GetRemoveProps) {
+    const parts = props.activeImageUrl.split('/upload/');
+    const removeUrl = `${parts[0]}/upload/e_gen_remove:${props.prompt}/${parts[1]}`;
+
+    const pipeline = pipe(
+      createGenerator(canFetchFromUrl),
+      withInterval(500),
+      withRetrial(5),
+    );
+
+    for await (const result of pipeline('https://example.com')) {
+      if (result instanceof Error)
+        return errorResult(`Image processing failed: ${result.message}.`);
+      if (result) return successResult({ url: removeUrl });
+    }
+
+    return errorResult('Image processing failed: Max retries exceeded.');
   }
 }
