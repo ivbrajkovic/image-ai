@@ -13,9 +13,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { createEmptyLayer } from '@/lib/create-empty-layer';
 import { cn } from '@/lib/utils';
 import { ImageStore } from '@/store/image-store';
+import { createEmptyLayer } from '@/store/utils/create-empty-layer';
 
 export const LayersBar = () => {
   const generating = ImageStore.useStore((state) => state.generating);

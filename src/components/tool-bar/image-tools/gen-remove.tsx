@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { genRemove } from '@/server/gen-remove-action';
 import { ImageStore } from '@/store/image-store';
 
 export const GenRemove = () => {
@@ -28,7 +29,13 @@ export const GenRemove = () => {
 
   const handleRemove = async () => {
     const newLayerId = crypto.randomUUID();
-    
+
+    const response = await genRemove({
+      prompt: 'Remove the selected object',
+      activeImageUrl: 'some url',
+    });
+
+    console.log({ response });
   };
 
   return (

@@ -68,7 +68,7 @@ export class Cloudinary {
       withRetrial(5),
     );
 
-    for await (const result of pipeline('https://example.com')) {
+    for await (const result of pipeline('https://www.some-other-url.com')) {
       if (result instanceof Error)
         return errorResult(`Image processing failed: ${result.message}.`);
       if (result) return successResult({ url: removeUrl });

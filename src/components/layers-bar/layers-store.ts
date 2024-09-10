@@ -2,7 +2,7 @@ import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { createStore } from 'zustand/vanilla';
 
-import { createZustandContext } from '@/lib/create-zustand-context';
+import { createZustandContext } from '@/store/utils/create-zustand-context';
 
 export type Layer = {
   id: string;
