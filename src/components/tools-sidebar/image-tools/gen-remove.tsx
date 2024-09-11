@@ -3,7 +3,7 @@
 import { Eraser } from 'lucide-react';
 import { useState } from 'react';
 
-import { LayersStore } from '@/components/layers-bar/layers-store';
+import { LayersStore } from '@/components/layers-sidebar/layers-store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -28,27 +28,41 @@ export const GenRemove = () => {
   };
 
   const handleRemove = async () => {
+    if (!activeLayer.url) return;
+
+    setGenerating(true);
     const newLayerId = crypto.randomUUID();
 
     const response = await genRemove({
-      prompt: 'Remove the selected object',
-      activeImageUrl: 'some url',
+      prompt: activeTag,
+      activeImageUrl: activeLayer.url,
     });
-
     console.log({ response });
+
+    if (response?.data?.url) {
+      addLayer({
+        ...activeLayer,
+        id: newLayerId,
+        url: response.data.url,
+        name: `Gen Remove ${activeLayer.name}`,
+        resourceType: 'image',
+      });
+      setActiveLayer(newLayerId);
+    }
+
+    setGenerating(false);
   };
 
   return (
     <Popover>
       <PopoverTrigger asChild disabled={!activeLayer.url}>
-        <Button className="p-8">
-          <span className="flex flex-col items-center justify-center gap-1 text-xs">
-            Content Aware <Eraser size={20} />
-          </span>
+        <Button className="flex items-center justify-center gap-2">
+          <span className="text-sm">Content Aware</span>
+          <Eraser size={16} />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full">
-        <div>
+        <div className="mb-4">
           <h3>Smart Ai Remove</h3>
           <p className="text-sm text-muted-foreground">
             Generative Remove any part of the image
@@ -62,7 +76,6 @@ export const GenRemove = () => {
             onChange={handleChangeTag}
           />
         </div>
-
         <Button className="mt-4 w-full" onClick={handleRemove}>
           Magic Remove
         </Button>

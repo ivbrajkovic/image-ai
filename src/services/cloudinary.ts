@@ -7,7 +7,6 @@ import {
   withInterval,
   withRetrial,
 } from '@/utils/generators';
-import { errorResult, successResult } from '@/utils/result';
 
 export type UploadImageProps = { image: File };
 export type GetRemoveProps = { prompt: string; activeImageUrl: string };
@@ -70,10 +69,10 @@ export class Cloudinary {
 
     for await (const result of pipeline('https://www.some-other-url.com')) {
       if (result instanceof Error)
-        return errorResult(`Image processing failed: ${result.message}.`);
-      if (result) return successResult({ url: removeUrl });
+        throw new Error(`Image processing failed: ${result.message}.`);
+      if (result) return { url: removeUrl };
     }
 
-    return errorResult('Image processing failed: Max retries exceeded.');
+    throw new Error('Image processing failed: Max retries exceeded.');
   }
 }

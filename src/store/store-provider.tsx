@@ -2,7 +2,7 @@
 
 import { PropsWithChildren } from 'react';
 
-import { LayersStore } from '@/components/layers-bar/layers-store';
+import { LayersStore } from '@/components/layers-sidebar/layers-store';
 import { ImageStore } from '@/store/image-store';
 import { createEmptyLayer } from '@/store/utils/create-empty-layer';
 

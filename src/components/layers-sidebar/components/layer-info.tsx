@@ -2,7 +2,7 @@
 
 import { Ellipsis, Trash2 } from 'lucide-react';
 
-import { Layer, LayersStore } from '@/components/layers-bar/layers-store';
+import { Layer, LayersStore } from '@/components/layers-sidebar/layers-store';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,

@@ -1,3 +1,4 @@
+import { UploadApiResponse } from 'cloudinary';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { createStore } from 'zustand/vanilla';
@@ -13,7 +14,7 @@ export type Layer = {
   name?: string;
   format?: string;
   poster?: string;
-  resourceType?: string;
+  resourceType?: UploadApiResponse['resource_type'];
   transcriptionUrl?: string;
 };
 export type LayerState = {

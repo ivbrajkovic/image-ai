@@ -2,7 +2,7 @@
 
 import { useDropzone } from 'react-dropzone';
 
-import { LayersStore } from '@/components/layers-bar/layers-store';
+import { LayersStore } from '@/components/layers-sidebar/layers-store';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { uploadImageAction } from '@/server/upload-image-action';

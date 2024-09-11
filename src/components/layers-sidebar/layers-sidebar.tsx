@@ -2,9 +2,9 @@
 
 import { Layers2 } from 'lucide-react';
 
-import { LayerImage } from '@/components/layers-bar/components/layer-image';
-import { LayerInfo } from '@/components/layers-bar/components/layer-info';
-import { LayersStore } from '@/components/layers-bar/layers-store';
+import { LayerImage } from '@/components/layers-sidebar/components/layer-image';
+import { LayerInfo } from '@/components/layers-sidebar/components/layer-info';
+import { LayersStore } from '@/components/layers-sidebar/layers-store';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 import { ImageStore } from '@/store/image-store';
 import { createEmptyLayer } from '@/store/utils/create-empty-layer';
 
-export const LayersBar = () => {
+export const LayersSidebar = () => {
   const generating = ImageStore.useStore((state) => state.generating);
   const layers = LayersStore.useStore((state) => state.layers);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
