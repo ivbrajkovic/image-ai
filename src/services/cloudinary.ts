@@ -63,11 +63,11 @@ export class Cloudinary {
 
     const pipeline = pipe(
       createGenerator(canFetchFromUrl),
-      withInterval(500),
-      withRetrial(5),
+      withInterval(1000),
+      withRetrial(20),
     );
 
-    for await (const result of pipeline('https://www.some-other-url.com')) {
+    for await (const result of pipeline(removeUrl)) {
       if (result instanceof Error)
         throw new Error(`Image processing failed: ${result.message}.`);
       if (result) return { url: removeUrl };

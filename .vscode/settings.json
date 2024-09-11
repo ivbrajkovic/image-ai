@@ -4,6 +4,7 @@
     "clsx",
     "Fetchable",
     "immer",
+    "lucide",
     "persistor",
     "reduxjs",
     "tailwindcss",
