@@ -9,7 +9,8 @@ import {
 } from '@/utils/generators';
 
 export type UploadImageProps = { image: File };
-export type GetRemoveProps = { prompt: string; activeImageUrl: string };
+export type GetRemoveProps = { prompt: string; url: string };
+export type BgRemoveProps = { format: string; newFormat?: string; url: string };
 
 export class Cloudinary {
   static #instance: Cloudinary;
@@ -58,7 +59,7 @@ export class Cloudinary {
   }
 
   async genRemove(props: GetRemoveProps) {
-    const parts = props.activeImageUrl.split('/upload/');
+    const parts = props.url.split('/upload/');
     const removeUrl = `${parts[0]}/upload/e_gen_remove:${props.prompt}/${parts[1]}`;
 
     const pipeline = pipe(
@@ -71,6 +72,26 @@ export class Cloudinary {
       if (result instanceof Error)
         throw new Error(`Image processing failed: ${result.message}.`);
       if (result) return { url: removeUrl };
+    }
+
+    throw new Error('Image processing failed: Max retries exceeded.');
+  }
+
+  async bgRemove({ newFormat = 'png', ...other }: BgRemoveProps) {
+    const urlWithReplacedFormat = other.url.replace(other.format, newFormat);
+    const urlParts = urlWithReplacedFormat.split('/upload/');
+    const bgRemoveUrl = `${urlParts[0]}/upload/e_background_removal/${urlParts[1]}`;
+
+    const pipeline = pipe(
+      createGenerator(canFetchFromUrl),
+      withInterval(1000),
+      withRetrial(20),
+    );
+
+    for await (const result of pipeline(bgRemoveUrl)) {
+      if (result instanceof Error)
+        throw new Error(`Image processing failed: ${result.message}.`);
+      if (result) return { url: bgRemoveUrl };
     }
 
     throw new Error('Image processing failed: Max retries exceeded.');

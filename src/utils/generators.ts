@@ -32,5 +32,8 @@ export function withRetrial(maxRetries: number) {
 
 export const canFetchFromUrl = (url: string) =>
   fetch(url)
-    .then((response) => response.ok)
+    .then((response) => {
+      // console.log({ response });
+      return response.ok;
+    })
     .catch(() => false);

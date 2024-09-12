@@ -3,7 +3,7 @@ import { PropsWithChildren } from 'react';
 
 import { Button, ButtonProps } from '@/components/ui/button';
 
-type ButtonLoadingProps = PropsWithChildren<
+export type ButtonLoadingProps = PropsWithChildren<
   ButtonProps & {
     isLoading?: boolean;
   }
@@ -11,11 +11,12 @@ type ButtonLoadingProps = PropsWithChildren<
 
 export const ButtonLoading = ({
   isLoading,
+  disabled,
   children,
   ...other
 }: ButtonLoadingProps) => {
   return (
-    <Button {...other} disabled={isLoading}>
+    <Button {...other} disabled={disabled || isLoading}>
       {isLoading ? <Loader2 className="mr-2 size-4 animate-spin" /> : null}
       {children}
     </Button>

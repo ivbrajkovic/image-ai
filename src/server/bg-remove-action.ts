@@ -6,13 +6,13 @@ import { actionClient } from '@/lib/safe-action';
 import { Cloudinary } from '@/services/cloudinary';
 
 const schema = z.object({
-  prompt: z.string(),
+  format: z.string(),
   url: z.string(),
 });
 
-export const genRemove = actionClient
-  .metadata({ actionName: 'genRemove' })
+export const bgRemove = actionClient
+  .metadata({ actionName: 'bgRemove' })
   .schema(schema)
   .action(({ parsedInput }) => {
-    return Cloudinary.instance.genRemove(parsedInput);
+    return Cloudinary.instance.bgRemove(parsedInput);
   });
