@@ -1,6 +1,6 @@
 'use client';
 
-import { Eraser } from 'lucide-react';
+import { ImageOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
 import { LayersStore } from '@/components/layers-sidebar/layers-store';
@@ -15,13 +15,13 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useRenderCount } from '@/hooks/use-render-count';
-import { genRemove } from '@/server/gen-remove-action';
+import { bgReplace } from '@/server/bg-replace-action';
 import { ImageStore } from '@/store/image-store';
 
 type FormValues = { prompt: string };
 
-export const GenRemove = () => {
-  useRenderCount('GenRemove');
+export const BgReplace = () => {
+  useRenderCount('BgReplace');
 
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
@@ -33,7 +33,7 @@ export const GenRemove = () => {
     if (!activeLayer.url) return;
     setGenerating(true);
 
-    genRemove({ prompt, url: activeLayer.url })
+    bgReplace({ prompt, url: activeLayer.url })
       .then((response) => {
         if (response?.serverError) throw new Error(response.serverError);
         if (!response?.data?.url) throw new Error('No URL returned');
@@ -48,16 +48,16 @@ export const GenRemove = () => {
     <Popover>
       <PopoverTrigger asChild disabled={!activeLayer.url}>
         <Button className="flex items-center justify-start gap-4">
-          <Eraser size={16} />
-          <span className="text-sm">Content Removal</span>
+          <ImageOff size={16} />
+          <span className="text-sm">Background Replace</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-full">
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="mb-4">
-            <h3>Smart Ai Remove</h3>
+            <h3>Background Replace</h3>
             <p className="text-sm text-muted-foreground">
-              Generative Remove any part of the image
+              Replace the background from an image with AI generated content.
             </p>
           </div>
           <div className="grid grid-cols-3 items-center gap-4">
@@ -68,7 +68,7 @@ export const GenRemove = () => {
             />
           </div>
           <ActionButton type="submit" disabled={!activeLayer.url}>
-            Magic Remove
+            Remove Background
           </ActionButton>
         </form>
       </PopoverContent>

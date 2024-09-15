@@ -29,7 +29,6 @@ export const UploadImage = () => {
       updateLayer({
         id: activeLayer.id,
         url: URL.createObjectURL(acceptedFiles[0]),
-        resourceType: 'image',
         name: 'Uploading',
         width: 0,
         height: 0,
@@ -55,7 +54,6 @@ export const UploadImage = () => {
           width: data.width,
           height: data.height,
           format: data.format,
-          resourceType: data.resource_type,
         });
 
       setActiveLayer(activeLayer.id);
@@ -80,7 +78,7 @@ export const UploadImage = () => {
               : 'Drag and drop some files here, or click to select files'}
           </p>
           <p className="text-muted-foreground">
-            Supported formats: png, jpg, jpeg, gif, webp
+            Supported formats: png, jpg, jpeg, webp
           </p>
         </div>
       </CardContent>

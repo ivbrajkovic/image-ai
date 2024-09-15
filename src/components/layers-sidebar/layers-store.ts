@@ -1,4 +1,3 @@
-import { UploadApiResponse } from 'cloudinary';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { createStore } from 'zustand/vanilla';
@@ -14,13 +13,12 @@ export type Layer = {
   name?: string;
   format?: string;
   poster?: string;
-  resourceType?: UploadApiResponse['resource_type'];
   transcriptionUrl?: string;
 };
 export type LayerState = {
   activeLayer: Layer;
   layers: Layer[];
-  layerComparisonMode: boolean;
+  comparisonMode: boolean;
   comparedLayersId: string[];
 };
 export type LayerActions = {
@@ -30,7 +28,7 @@ export type LayerActions = {
   setActiveLayer: (id: string) => void;
   setPoster: (id: string, posterUrl: string) => void;
   setTranscriptionUrl: (id: string, transcriptionUrl: string) => void;
-  setLayerComparisonMode: (mode: boolean) => void;
+  setComparisonMode: (mode: boolean) => void;
   setComparedLayerIds: (ids: string[]) => void;
   toggleComparedLayerId: (id: string) => void;
 };
@@ -46,7 +44,7 @@ const createLayerStore = (initialState: {
       immer((set) => ({
         activeLayer: initialState.layers[0],
         layers: initialState.layers,
-        layerComparisonMode: initialState.layerComparisonMode,
+        comparisonMode: initialState.layerComparisonMode,
         comparedLayersId: [],
 
         addLayer: (layer) =>
@@ -83,16 +81,16 @@ const createLayerStore = (initialState: {
             state.layers[index].transcriptionUrl = transcriptionUrl;
           }),
 
-        setLayerComparisonMode: (mode) =>
+        setComparisonMode: (mode) =>
           set((state) => {
-            state.layerComparisonMode = mode;
+            state.comparisonMode = mode;
             state.comparedLayersId = [];
           }),
 
         setComparedLayerIds: (ids) =>
           set((state) => {
             state.comparedLayersId = ids;
-            state.layerComparisonMode = ids.length > 0;
+            state.comparisonMode = ids.length > 0;
           }),
 
         toggleComparedLayerId: (id) =>
@@ -100,7 +98,7 @@ const createLayerStore = (initialState: {
             const index = state.comparedLayersId.indexOf(id);
             if (index === -1) state.comparedLayersId.push(id);
             else state.comparedLayersId.splice(index, 1);
-            state.layerComparisonMode = state.comparedLayersId.length > 0;
+            state.comparisonMode = state.comparedLayersId.length > 0;
           }),
       })),
       { name: 'layer-store' },

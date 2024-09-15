@@ -1,5 +1,3 @@
-import { splitFilename } from '@/utils/split-filename';
-
 /**
  * Increments the number in the filename by 1 and returns the updated filename.
  * If the filename does not contain a number, it appends the number 1 to the filename.

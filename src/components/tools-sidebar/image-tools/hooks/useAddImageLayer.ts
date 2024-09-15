@@ -17,7 +17,6 @@ export const useAddImageLayer = () => {
       ...props,
       id: newLayerId,
       name: newName,
-      resourceType: 'image',
     });
     setActiveLayer(newLayerId);
   };
