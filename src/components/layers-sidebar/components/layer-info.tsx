@@ -3,7 +3,6 @@
 import { Ellipsis, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
-import { Layer, LayersStore } from '@/components/layers-sidebar/layers-store';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -12,6 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { Layer, LayersStore } from '@/store/layers-store';
 import { stopPropagation } from '@/utils/stop-propagation';
 
 type LayersInfoProps = Pick<

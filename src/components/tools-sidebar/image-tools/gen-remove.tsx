@@ -3,7 +3,6 @@
 import { Eraser } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-import { LayersStore } from '@/components/layers-sidebar/layers-store';
 import { ActionButton } from '@/components/tools-sidebar/components/action-button';
 import { useAddImageLayer } from '@/components/tools-sidebar/image-tools/hooks/useAddImageLayer';
 import { Button } from '@/components/ui/button';
@@ -17,6 +16,7 @@ import {
 import { useRenderCount } from '@/hooks/use-render-count';
 import { genRemove } from '@/server/gen-remove-action';
 import { ImageStore } from '@/store/image-store';
+import { LayersStore } from '@/store/layers-store';
 
 type FormValues = { prompt: string };
 

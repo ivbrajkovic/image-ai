@@ -5,7 +5,6 @@ import Image from 'next/image';
 
 import { LayerImage } from '@/components/layers-sidebar/components/layer-image';
 import { LayerInfo } from '@/components/layers-sidebar/components/layer-info';
-import { LayersStore } from '@/components/layers-sidebar/layers-store';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -16,6 +15,7 @@ import {
 } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { ImageStore } from '@/store/image-store';
+import { LayersStore } from '@/store/layers-store';
 import { createEmptyLayer } from '@/store/utils/create-empty-layer';
 
 export const LayersSidebar = () => {

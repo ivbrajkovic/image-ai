@@ -1,8 +1,8 @@
 import Image from 'next/image';
 
-import { LayersStore } from '@/components/layers-sidebar/layers-store';
 import { cn } from '@/lib/utils';
 import { ImageStore } from '@/store/image-store';
+import { LayersStore } from '@/store/layers-store';
 
 export const ActiveImage = () => {
   const generating = ImageStore.useStore((state) => state.generating);

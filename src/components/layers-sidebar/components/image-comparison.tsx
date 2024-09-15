@@ -5,7 +5,7 @@ import {
   ReactCompareSliderImage,
 } from 'react-compare-slider';
 
-import { LayersStore } from '@/components/layers-sidebar/layers-store';
+import { LayersStore } from '@/store/layers-store';
 
 export const ImageComparison = () => {
   const layers = LayersStore.useStore((state) => state.layers);

@@ -1,4 +1,4 @@
-import { Layer, LayersStore } from '@/components/layers-sidebar/layers-store';
+import { Layer, LayersStore } from '@/store/layers-store';
 import { incrementFilenameNumber } from '@/utils/increment-filename-number';
 
 export const useAddImageLayer = () => {

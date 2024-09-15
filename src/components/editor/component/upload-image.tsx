@@ -2,11 +2,11 @@
 
 import { useDropzone } from 'react-dropzone';
 
-import { LayersStore } from '@/components/layers-sidebar/layers-store';
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { uploadImageAction } from '@/server/upload-image-action';
 import { ImageStore } from '@/store/image-store';
+import { LayersStore } from '@/store/layers-store';
 
 export const UploadImage = () => {
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);

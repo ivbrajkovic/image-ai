@@ -2,7 +2,6 @@
 
 import { Image as ImageIcon } from 'lucide-react';
 
-import { LayersStore } from '@/components/layers-sidebar/layers-store';
 import { ActionButton } from '@/components/tools-sidebar/components/action-button';
 import { useAddImageLayer } from '@/components/tools-sidebar/image-tools/hooks/useAddImageLayer';
 import { Button } from '@/components/ui/button';
@@ -14,6 +13,7 @@ import {
 import { useRenderCount } from '@/hooks/use-render-count';
 import { bgRemove } from '@/server/bg-remove-action';
 import { ImageStore } from '@/store/image-store';
+import { LayersStore } from '@/store/layers-store';
 
 export const BgRemove = () => {
   useRenderCount('BgRemove');

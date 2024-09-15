@@ -3,7 +3,7 @@
 import { ActiveImage } from '@/components/editor/component/active-image';
 import { UploadImage } from '@/components/editor/component/upload-image';
 import { ImageComparison } from '@/components/layers-sidebar/components/image-comparison';
-import { LayersStore } from '@/components/layers-sidebar/layers-store';
+import { LayersStore } from '@/store/layers-store';
 
 export const Editor = () => {
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);

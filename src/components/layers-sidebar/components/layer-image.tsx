@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 
-import { Layer } from '@/components/layers-sidebar/layers-store';
+import { Layer } from '@/store/layers-store';
 
 type LayerImageProps = Pick<Layer, 'url' | 'name' | 'format' | 'poster'>;
 

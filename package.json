@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "ts:check": "tsc --noEmit",
     "lint": "next lint",
     "lint:debug": "eslint ./src --debug",
     "lint:fix": "eslint ./src --fix"
