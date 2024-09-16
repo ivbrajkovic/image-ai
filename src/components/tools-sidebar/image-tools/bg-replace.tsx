@@ -30,7 +30,7 @@ export const BgReplace = () => {
   const { addImageLayer } = useAddImageLayer();
 
   const handleSubmit = ({ prompt }: FormValues) => {
-    if (!activeLayer.url) return;
+    if (!activeLayer.url) throw new Error('No active layer');
     setGenerating(true);
 
     bgReplace({ prompt, url: activeLayer.url })
@@ -48,7 +48,7 @@ export const BgReplace = () => {
     <Popover>
       <PopoverTrigger asChild disabled={!activeLayer.url}>
         <Button className="flex items-center justify-start gap-4">
-          <ImageOff size={16} />
+          <ImageOff size={16} className="text-secondary-foreground" />
           <span className="text-sm">Background Replace</span>
         </Button>
       </PopoverTrigger>

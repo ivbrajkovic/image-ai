@@ -24,7 +24,9 @@ export const BgRemove = () => {
   const { addImageLayer } = useAddImageLayer();
 
   const handleRemove = () => {
-    if (!activeLayer.url || !activeLayer.format) return;
+    if (!activeLayer.url) throw new Error('No active layer');
+    if (!activeLayer.format) throw new Error('No active layer format');
+
     setGenerating(true);
 
     bgRemove({ format: activeLayer.format, url: activeLayer.url })

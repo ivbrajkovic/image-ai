@@ -30,7 +30,7 @@ export const GenRemove = () => {
   const { addImageLayer } = useAddImageLayer();
 
   const handleSubmit = ({ prompt }: FormValues) => {
-    if (!activeLayer.url) return;
+    if (!activeLayer.url) throw new Error('No active layer');
     setGenerating(true);
 
     genRemove({ prompt, url: activeLayer.url })

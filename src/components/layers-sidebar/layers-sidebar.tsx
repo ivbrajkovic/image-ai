@@ -1,11 +1,12 @@
 'use client';
 
-import { ArrowRight, Images, Layers2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 
+import { AddLayerButton } from '@/components/layers-sidebar/components/add-layer-button';
+import { ComparisonButton } from '@/components/layers-sidebar/components/comparison-button';
 import { LayerImage } from '@/components/layers-sidebar/components/layer-image';
 import { LayerInfo } from '@/components/layers-sidebar/components/layer-info';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -16,26 +17,19 @@ import {
 import { cn } from '@/lib/utils';
 import { ImageStore } from '@/store/image-store';
 import { LayersStore } from '@/store/layers-store';
-import { createEmptyLayer } from '@/store/utils/create-empty-layer';
 
 export const LayersSidebar = () => {
   const generating = ImageStore.useStore((state) => state.generating);
   const layers = LayersStore.useStore((state) => state.layers);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
-  const addLayer = LayersStore.useStore((state) => state.addLayer);
   const setActiveLayer = LayersStore.useStore((state) => state.setActiveLayer);
   const comparisonMode = LayersStore.useStore((state) => state.comparisonMode);
-  const setComparisonMode = LayersStore.useStore(
-    (state) => state.setComparisonMode,
-  );
+
   const comparedLayersId = LayersStore.useStore(
     (state) => state.comparedLayersId,
   );
   const toggleComparedLayerId = LayersStore.useStore(
     (state) => state.toggleComparedLayerId,
-  );
-  const setComparedLayerIds = LayersStore.useStore(
-    (state) => state.setComparedLayerIds,
   );
 
   const getImageUrl = (id: string) => {
@@ -126,34 +120,9 @@ export const LayersSidebar = () => {
           </div>
         ))}
       </CardContent>
-      <div className="sticky bottom-0 flex shrink-0 gap-2 bg-card p-2">
-        <Button
-          variant="outline"
-          className="flex w-full gap-2"
-          onClick={addLayer.bind(null, createEmptyLayer())}
-        >
-          <span>Create Layer</span>
-          <Layers2 size={18} className="text-secondary-foreground" />
-        </Button>
-        <Button
-          variant="outline"
-          disabled={!activeLayer.url || generating}
-          className="flex w-full gap-2"
-          onClick={() => {
-            if (comparisonMode) {
-              setComparisonMode(false);
-              setComparedLayerIds([]);
-            } else {
-              setComparisonMode(true);
-              setComparedLayerIds([activeLayer.id]);
-            }
-          }}
-        >
-          <span>{comparisonMode ? 'Cancel Comparison' : 'Compare Layers'}</span>
-          {!comparisonMode ? (
-            <Images className="text-secondary-foreground" size={18} />
-          ) : null}
-        </Button>
+      <div className="sticky bottom-0 flex shrink-0 flex-col gap-2 bg-card p-2">
+        <AddLayerButton />
+        <ComparisonButton />
       </div>
     </Card>
   );

@@ -1,4 +1,6 @@
-import { ImageTools } from '@/components/tools-sidebar/image-tools';
+import { BgRemove } from '@/components/tools-sidebar/image-tools/bg-remove';
+import { BgReplace } from '@/components/tools-sidebar/image-tools/bg-replace';
+import { GenRemove } from '@/components/tools-sidebar/image-tools/gen-remove';
 import { ModeToggle } from '@/theme/mode-toggle';
 
 export const ToolsSidebar = () => {
@@ -8,7 +10,9 @@ export const ToolsSidebar = () => {
         <ModeToggle />
       </div>
       <div className="flex flex-col gap-4">
-        <ImageTools />
+        <GenRemove />
+        <BgRemove />
+        <BgReplace />
       </div>
     </div>
   );

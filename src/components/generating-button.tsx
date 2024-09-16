@@ -3,12 +3,11 @@
 import { Button } from '@/components/ui/button';
 import { ImageStore } from '@/store/image-store';
 
-export const TestButton = () => {
+export const GeneratingButton = () => {
   const generating = ImageStore.useStore((state) => state.generating);
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);
 
   const handleClick = () => {
-    console.log('click');
     setGenerating(!generating);
   };
 
