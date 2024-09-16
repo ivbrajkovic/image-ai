@@ -8,7 +8,7 @@ export const Copyright = () => {
           <span className="text-xs">2024</span>
           <CopyrightIcon size={8} className="self-start" />
         </div>
-        <span className="text-xs">Ivan Brajković</span>
+        <span className="whitespace-nowrap text-xs">Ivan Brajković</span>
       </div>
 
       <div className="flex items-center gap-2">
