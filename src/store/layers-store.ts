@@ -12,7 +12,6 @@ export type Layer = {
   url?: string;
   name?: string;
   format?: string;
-  poster?: string;
   transcriptionUrl?: string;
 };
 export type LayerState = {
@@ -26,7 +25,6 @@ export type LayerActions = {
   removeLayer: (id: string) => void;
   updateLayer: (layer: Layer) => void;
   setActiveLayer: (id: string) => void;
-  setPoster: (id: string, posterUrl: string) => void;
   setTranscriptionUrl: (id: string, transcriptionUrl: string) => void;
   setComparisonMode: (mode: boolean) => void;
   setComparedLayerIds: (ids: string[]) => void;
@@ -67,12 +65,6 @@ const createLayerStore = (initialState: {
           set((state) => {
             const layer = state.layers.find((layer) => layer.id === id);
             state.activeLayer = layer ?? state.layers[0];
-          }),
-
-        setPoster: (id, posterUrl) =>
-          set((state) => {
-            const index = state.layers.findIndex((layer) => layer.id === id);
-            state.layers[index].poster = posterUrl;
           }),
 
         setTranscriptionUrl: (id, transcriptionUrl) =>

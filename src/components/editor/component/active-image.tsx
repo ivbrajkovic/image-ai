@@ -11,7 +11,7 @@ export const ActiveImage = () => {
   if (!activeLayer.url) return <div>No active layer selected.</div>;
 
   return (
-    <div className="h-svh bg-secondary p-24">
+    <div className="h-full bg-secondary p-0 md:p-16">
       <div className="relative flex size-full items-center justify-center">
         <Image
           fill

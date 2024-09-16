@@ -43,57 +43,15 @@ export const LayersSidebar = () => {
     else setActiveLayer(layerId);
   };
 
-  // return (
-  //   <div className="grid max-h-full grid-rows-[48px_1fr_48px]">
-  //     <div className="h-12 bg-black text-white">Header</div>
-  //     <div className="h-0 min-h-full overflow-auto bg-red-300">
-  //       {[...layers, ...layers, ...layers].map((layer, index) => (
-  //         <div
-  //           key={layer.id}
-  //           className={cn(
-  //             'cursor-pointer rounded-sm border border-transparent ease-in-out hover:bg-secondary',
-  //             {
-  //               'animate-pulse': generating,
-  //               'border-primary': comparisonMode
-  //                 ? comparedLayersId.includes(layer.id)
-  //                 : activeLayer.id === layer.id,
-  //             },
-  //           )}
-  //           onClick={handleSetActiveLayer(layer.id)}
-  //         >
-  //           <div className="relative flex items-center p-4">
-  //             <div className="flex h-8 w-full items-center justify-between gap-2">
-  //               {!layer.url ? (
-  //                 <p className="justify-self-end text-sm font-medium">
-  //                   New Layer
-  //                 </p>
-  //               ) : null}
-  //               <LayerImage
-  //                 url={layer.url}
-  //                 name={layer.name}
-  //                 poster={layer.poster}
-  //                 format={layer.format}
-  //               />
-  //               <LayerInfo
-  //                 id={layer.id}
-  //                 name={layer.name}
-  //                 format={layer.format}
-  //                 width={layer.width}
-  //                 height={layer.height}
-  //                 index={index}
-  //               />
-  //             </div>
-  //           </div>
-  //         </div>
-  //       ))}
-  //     </div>
-  //     <div className="h-12 bg-black text-white">Footer</div>
-  //   </div>
-  // );
-
   return (
-    <Card className="grid h-full max-h-full grid-rows-[auto_1fr_auto] ">
-      <CardHeader className="flex min-h-20 flex-row gap-2 bg-card p-4 shadow-sm">
+    <Card className="grid h-full max-h-full grid-rows-[auto_1fr_auto] border-0">
+      <CardHeader className="flex min-h-20 flex-col gap-2 bg-card p-4 shadow-sm">
+        <div className="hidden flex-col text-left md:flex">
+          <h2 className="text-lg font-semibold tracking-tight">Layers</h2>
+          <p className="text-xs text-muted-foreground">
+            Layers to manage your image edits.
+          </p>
+        </div>
         {comparisonMode ? (
           <div>
             <CardTitle className="pb-2 text-sm">Comparing...</CardTitle>
@@ -156,7 +114,6 @@ export const LayersSidebar = () => {
                 <LayerImage
                   url={layer.url}
                   name={layer.name}
-                  poster={layer.poster}
                   format={layer.format}
                 />
                 <LayerInfo

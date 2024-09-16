@@ -22,36 +22,37 @@ export const ImageComparison = () => {
   if (!comparisonLayers.length) return <div>No layers selected.</div>;
 
   return (
-    <div className="h-svh bg-secondary p-24">
-      <div className="relative flex size-full items-center justify-center">
-        {comparisonLayers.length === 1 ? (
+    <div className="h-full bg-secondary p-0 md:p-16">
+      {comparisonLayers.length === 1 ? (
+        <div className="relative flex size-full items-center justify-center">
           <ReactCompareSliderImage
             src={comparisonLayers[0].url || ''}
             srcSet={comparisonLayers[0].url || ''}
             alt={comparisonLayers[0].name || 'Single image'}
-            className="rounded-lg !object-contain"
+            className="absolute inset-0 rounded-lg !object-contain"
           />
-        ) : (
-          <ReactCompareSlider
-            itemOne={
-              <ReactCompareSliderImage
-                src={comparisonLayers[0].url || ''}
-                srcSet={comparisonLayers[0].url || ''}
-                alt={comparisonLayers[0].name || 'Image one'}
-                className="rounded-lg object-contain"
-              />
-            }
-            itemTwo={
-              <ReactCompareSliderImage
-                src={comparisonLayers[1].url || ''}
-                srcSet={comparisonLayers[1].url || ''}
-                alt={comparisonLayers[1].name || 'Image two'}
-                className="rounded-lg object-contain"
-              />
-            }
-          />
-        )}
-      </div>
+        </div>
+      ) : (
+        <ReactCompareSlider
+          className="relative flex size-full items-center justify-center"
+          itemOne={
+            <ReactCompareSliderImage
+              src={comparisonLayers[0].url || ''}
+              srcSet={comparisonLayers[0].url || ''}
+              alt={comparisonLayers[0].name || 'Image one'}
+              className="absolute inset-0 rounded-lg !object-contain"
+            />
+          }
+          itemTwo={
+            <ReactCompareSliderImage
+              src={comparisonLayers[1].url || ''}
+              srcSet={comparisonLayers[1].url || ''}
+              alt={comparisonLayers[1].name || 'Image two'}
+              className="absolute inset-0 rounded-lg !object-contain"
+            />
+          }
+        />
+      )}
     </div>
   );
 };

@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 // import { cookies } from 'next/headers';
 import { Inter } from 'next/font/google';
 
+import { Copyright } from '@/components/copyright/copyright';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/theme/theme-provider';
 
@@ -28,6 +29,7 @@ export default function RootLayout({
           defaultTheme="dark"
         >
           {children}
+          <Copyright />
         </ThemeProvider>
       </body>
     </html>
