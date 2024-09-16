@@ -43,9 +43,57 @@ export const LayersSidebar = () => {
     else setActiveLayer(layerId);
   };
 
+  // return (
+  //   <div className="grid max-h-full grid-rows-[48px_1fr_48px]">
+  //     <div className="h-12 bg-black text-white">Header</div>
+  //     <div className="h-0 min-h-full overflow-auto bg-red-300">
+  //       {[...layers, ...layers, ...layers].map((layer, index) => (
+  //         <div
+  //           key={layer.id}
+  //           className={cn(
+  //             'cursor-pointer rounded-sm border border-transparent ease-in-out hover:bg-secondary',
+  //             {
+  //               'animate-pulse': generating,
+  //               'border-primary': comparisonMode
+  //                 ? comparedLayersId.includes(layer.id)
+  //                 : activeLayer.id === layer.id,
+  //             },
+  //           )}
+  //           onClick={handleSetActiveLayer(layer.id)}
+  //         >
+  //           <div className="relative flex items-center p-4">
+  //             <div className="flex h-8 w-full items-center justify-between gap-2">
+  //               {!layer.url ? (
+  //                 <p className="justify-self-end text-sm font-medium">
+  //                   New Layer
+  //                 </p>
+  //               ) : null}
+  //               <LayerImage
+  //                 url={layer.url}
+  //                 name={layer.name}
+  //                 poster={layer.poster}
+  //                 format={layer.format}
+  //               />
+  //               <LayerInfo
+  //                 id={layer.id}
+  //                 name={layer.name}
+  //                 format={layer.format}
+  //                 width={layer.width}
+  //                 height={layer.height}
+  //                 index={index}
+  //               />
+  //             </div>
+  //           </div>
+  //         </div>
+  //       ))}
+  //     </div>
+  //     <div className="h-12 bg-black text-white">Footer</div>
+  //   </div>
+  // );
+
   return (
-    <Card className="relative flex flex-col overflow-x-hidden overflow-y-scroll shadow-2xl scrollbar-thin scrollbar-track-secondary scrollbar-thumb-primary scrollbar-track-rounded-full  scrollbar-thumb-rounded-full">
-      <CardHeader className="sticky top-0 z-50 min-h-24 bg-card p-4 shadow-sm">
+    <Card className="grid h-full max-h-full grid-rows-[auto_1fr_auto] ">
+      <CardHeader className="flex min-h-20 flex-row gap-2 bg-card p-4 shadow-sm">
         {comparisonMode ? (
           <div>
             <CardTitle className="pb-2 text-sm">Comparing...</CardTitle>
@@ -69,18 +117,22 @@ export const LayersSidebar = () => {
               )}
             </CardDescription>
           </div>
-        ) : null}
-        <CardTitle className="text-sm">
-          {activeLayer.name || 'Layers'}
-        </CardTitle>
-        {activeLayer.width && activeLayer.height ? (
-          <CardDescription className="text-xs">
-            {activeLayer.width} x {activeLayer.height}
-          </CardDescription>
-        ) : null}
+        ) : (
+          <div>
+            <CardTitle className="text-sm">
+              {activeLayer.name || 'Layers'}
+            </CardTitle>
+            {activeLayer.width && activeLayer.height ? (
+              <CardDescription className="text-xs">
+                {activeLayer.width} x {activeLayer.height}
+              </CardDescription>
+            ) : null}
+          </div>
+        )}
       </CardHeader>
-      <CardContent className="flex flex-1 flex-col">
-        {layers.map((layer, index) => (
+
+      <CardContent className="flex h-0 min-h-full flex-1 flex-col overflow-auto overflow-y-scroll px-2 scrollbar-thin scrollbar-track-secondary scrollbar-thumb-primary scrollbar-track-rounded-full scrollbar-thumb-rounded-full">
+        {[...layers, ...layers, ...layers].map((layer, index) => (
           <div
             key={layer.id}
             className={cn(
@@ -120,7 +172,7 @@ export const LayersSidebar = () => {
           </div>
         ))}
       </CardContent>
-      <div className="sticky bottom-0 flex shrink-0 flex-col gap-2 bg-card p-2">
+      <div className="flex flex-col gap-2 bg-card p-2">
         <AddLayerButton />
         <ComparisonButton />
       </div>

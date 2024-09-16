@@ -5,15 +5,13 @@ import { ModeToggle } from '@/theme/mode-toggle';
 
 export const ToolsSidebar = () => {
   return (
-    <div className="px-4 py-6">
-      <div className="pb-12 text-center">
+    <>
+      <div className="pb-2 text-center md:pb-4">
         <ModeToggle />
       </div>
-      <div className="flex flex-col gap-4">
-        <GenRemove />
-        <BgRemove />
-        <BgReplace />
-      </div>
-    </div>
+      <GenRemove />
+      <BgRemove />
+      <BgReplace />
+    </>
   );
 };
