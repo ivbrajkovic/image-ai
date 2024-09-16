@@ -90,7 +90,7 @@ export const LayersSidebar = () => {
       </CardHeader>
 
       <CardContent className="flex h-0 min-h-full flex-1 flex-col overflow-auto overflow-y-scroll px-2 scrollbar-thin scrollbar-track-secondary scrollbar-thumb-primary scrollbar-track-rounded-full scrollbar-thumb-rounded-full">
-        {[...layers, ...layers, ...layers].map((layer, index) => (
+        {layers.map((layer, index) => (
           <div
             key={layer.id}
             className={cn(
