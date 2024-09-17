@@ -7,5 +7,7 @@ namespace NodeJS {
     CLOUDINARY_SECRET: string;
     CLOUDINARY_URL: string;
     CLOUDINARY_UPLOAD_PRESET: string;
+    NEXT_PUBLIC_SUPABASE_URL: string;
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: string;
   }
 }

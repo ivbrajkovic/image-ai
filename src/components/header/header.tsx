@@ -11,6 +11,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
+import { LogoutButton } from '@/features/auth/logout/logout-button';
 import { useBreakpoint } from '@/hooks/tailwind';
 import { ModeToggle } from '@/theme/mode-toggle';
 
@@ -43,7 +44,9 @@ export const Header = () => {
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <h1 className="text-lg">Image AI</h1>
       </div>
+
       <ModeToggle />
+      <LogoutButton />
 
       {!isDesktop ? (
         <Sheet>

@@ -8,6 +8,7 @@ import { ToolsSidebar } from '@/components/tools-sidebar/tools-sidebar';
 import { StoreProvider } from '@/store/store-provider';
 
 export default function Home() {
+  
   return (
     <StoreProvider>
       <AppShell

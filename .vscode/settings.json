@@ -8,6 +8,7 @@
     "lucide",
     "persistor",
     "reduxjs",
+    "SUPABASE",
     "tailwindcss",
     "webp",
     "zustand"

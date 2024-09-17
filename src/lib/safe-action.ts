@@ -1,5 +1,8 @@
 import { cookies } from 'next/headers';
-import { createSafeActionClient } from 'next-safe-action';
+import {
+  createSafeActionClient,
+  DEFAULT_SERVER_ERROR_MESSAGE,
+} from 'next-safe-action';
 import { z } from 'zod';
 
 const getUserIdFromSessionId = async (_session: string) => {
@@ -8,9 +11,11 @@ const getUserIdFromSessionId = async (_session: string) => {
 
 export const actionClient = createSafeActionClient({
   defineMetadataSchema() {
-    return z.object({
-      actionName: z.string(),
-    });
+    return z.object({ actionName: z.string() });
+  },
+  handleServerError(e) {
+    console.error('Action error:', e.message);
+    return DEFAULT_SERVER_ERROR_MESSAGE;
   },
 });
 

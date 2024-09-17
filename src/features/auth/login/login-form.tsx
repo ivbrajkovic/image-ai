@@ -3,7 +3,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useHookFormAction } from '@next-safe-action/adapter-react-hook-form/hooks';
 
-import { loginAction } from '@/app/login/login-action';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -22,10 +21,11 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { loginAction } from '@/features/auth/login/login-action';
 import {
-  LoginProps,
+  LoginValues,
   loginSchema,
-} from '@/services/auth-service/auth-validation';
+} from '@/features/auth/login/login-validation';
 
 export const description =
   "A simple login form with username and password. The submit button says 'Sign in'.";
@@ -35,10 +35,21 @@ export const LoginForm = () => {
     loginAction,
     zodResolver(loginSchema),
     {
+      actionProps: {
+        onSuccess: (res) => {
+          console.log('success', res);
+        },
+        onError: (error) => {
+          console.log('error', error);
+        },
+        onSettled: () => {
+          console.log('settled');
+        },
+      },
       formProps: {
         defaultValues: {
-          username: '',
-          password: '',
+          email: process.env.NEXT_PUBLIC_SUPABASE_TEST_EMAIL,
+          password: process.env.NEXT_PUBLIC_SUPABASE_TEST_PASSWORD,
         },
       },
     },
@@ -51,23 +62,23 @@ export const LoginForm = () => {
           <CardHeader>
             <CardTitle className="text-2xl">Login</CardTitle>
             <CardDescription>
-              Enter your username and password to sign in
+              Enter your email and password to sign in
             </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
-            <FormField<LoginProps>
-              name="username"
+            <FormField<LoginValues>
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder="Enter your username" {...field} />
+                    <Input placeholder="Enter your email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <FormField<LoginProps>
+            <FormField<LoginValues>
               name="password"
               render={({ field }) => (
                 <FormItem>
