@@ -48,8 +48,8 @@ export const LoginForm = () => {
       },
       formProps: {
         defaultValues: {
-          email: process.env.NEXT_PUBLIC_SUPABASE_TEST_EMAIL,
-          password: process.env.NEXT_PUBLIC_SUPABASE_TEST_PASSWORD,
+          email: '',
+          password: '',
         },
       },
     },
