@@ -1,8 +1,8 @@
 'use client';
 
-import { ActiveImage } from '@/components/editor/component/active-image';
-import { UploadImage } from '@/components/editor/component/upload-image';
-import { ImageComparison } from '@/components/layers-sidebar/components/image-comparison';
+import { ActiveImage } from '@/features/editor/component/active-image';
+import { UploadImage } from '@/features/editor/component/upload-image';
+import { ImageComparison } from '@/features/layers/components/image-comparison';
 import { LayersStore } from '@/store/layers-store';
 
 export const Editor = () => {

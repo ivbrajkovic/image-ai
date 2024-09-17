@@ -12,7 +12,7 @@ export const AppShell = (props: AppShellProps) => {
   const isDesktop = useBreakpoint('md', true);
 
   return (
-    <div className="grid h-screen grid-rows-[auto_1fr]">
+    <div className="grid h-svh grid-rows-[auto_1fr]">
       <header className="flex h-14 w-full items-center border-b px-4">
         {props.header}
       </header>

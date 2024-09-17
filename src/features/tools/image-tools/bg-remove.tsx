@@ -2,14 +2,14 @@
 
 import { Image as ImageIcon } from 'lucide-react';
 
-import { ActionButton } from '@/components/tools-sidebar/components/action-button';
-import { useAddImageLayer } from '@/components/tools-sidebar/image-tools/hooks/useAddImageLayer';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { ActionButton } from '@/features/tools/components/action-button';
+import { useAddImageLayer } from '@/features/tools/image-tools/hooks/useAddImageLayer';
 import { useRenderCount } from '@/hooks/use-render-count';
 import { bgRemove } from '@/server/bg-remove-action';
 import { ImageStore } from '@/store/image-store';

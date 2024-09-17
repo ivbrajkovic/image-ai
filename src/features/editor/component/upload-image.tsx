@@ -72,10 +72,13 @@ export const UploadImage = () => {
       <CardContent className="flex h-full flex-col items-center justify-center px-2 py-24 text-xs">
         <input {...getInputProps()} />
         <div className="flex flex-col items-center justify-center gap-2">
-          <p className="text-2xl text-muted-foreground">
+          <p className="hidden text-2xl text-muted-foreground md:block">
             {isDragActive
               ? 'Drop the files here ...'
               : 'Drag and drop some files here, or click to select files'}
+          </p>
+          <p className="text-center text-lg text-muted-foreground md:hidden">
+            Tap to select files from your device
           </p>
           <p className="text-muted-foreground">
             Supported formats: png, jpg, jpeg, webp

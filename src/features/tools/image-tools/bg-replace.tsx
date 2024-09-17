@@ -3,8 +3,6 @@
 import { ImageOff } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 
-import { ActionButton } from '@/components/tools-sidebar/components/action-button';
-import { useAddImageLayer } from '@/components/tools-sidebar/image-tools/hooks/useAddImageLayer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -13,6 +11,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { ActionButton } from '@/features/tools/components/action-button';
+import { useAddImageLayer } from '@/features/tools/image-tools/hooks/useAddImageLayer';
 import { useRenderCount } from '@/hooks/use-render-count';
 import { bgReplace } from '@/server/bg-replace-action';
 import { ImageStore } from '@/store/image-store';

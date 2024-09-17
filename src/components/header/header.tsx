@@ -1,7 +1,5 @@
-import { Layers, Paintbrush } from 'lucide-react';
+import { Layers as LayersIcon, Paintbrush } from 'lucide-react';
 
-import { LayersSidebar } from '@/components/layers-sidebar/layers-sidebar';
-import { ToolsSidebar } from '@/components/tools-sidebar/tools-sidebar';
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -12,6 +10,8 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { LogoutButton } from '@/features/auth/logout/logout-button';
+import { Layers } from '@/features/layers/layers';
+import { Tools } from '@/features/tools/tools';
 import { useBreakpoint } from '@/hooks/tailwind';
 import { ModeToggle } from '@/theme/mode-toggle';
 
@@ -35,24 +35,25 @@ export const Header = () => {
                 Tools to help you edit your image with help of AI.
               </SheetDescription>
             </SheetHeader>
-            <ToolsSidebar />
+            <Tools />
           </SheetContent>
         </Sheet>
       ) : null}
+
+      <ModeToggle />
 
       <div className="flex-1"></div>
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
         <h1 className="text-lg">Image AI</h1>
       </div>
 
-      <ModeToggle />
       <LogoutButton />
 
       {!isDesktop ? (
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon" className="shrink-0">
-              <Layers className="size-5" />
+              <LayersIcon className="size-5" />
               <span className="sr-only">Toggle layers</span>
             </Button>
           </SheetTrigger>
@@ -63,7 +64,7 @@ export const Header = () => {
                 Layers to help you manage your image edits.
               </SheetDescription>
             </SheetHeader>
-            <LayersSidebar />
+            <Layers />
           </SheetContent>
         </Sheet>
       ) : null}

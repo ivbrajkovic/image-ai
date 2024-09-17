@@ -3,10 +3,6 @@
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 
-import { AddLayerButton } from '@/components/layers-sidebar/components/add-layer-button';
-import { ComparisonButton } from '@/components/layers-sidebar/components/comparison-button';
-import { LayerImage } from '@/components/layers-sidebar/components/layer-image';
-import { LayerInfo } from '@/components/layers-sidebar/components/layer-info';
 import {
   Card,
   CardContent,
@@ -14,11 +10,15 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { AddLayerButton } from '@/features/layers/components/add-layer-button';
+import { ComparisonButton } from '@/features/layers/components/comparison-button';
+import { LayerImage } from '@/features/layers/components/layer-image';
+import { LayerInfo } from '@/features/layers/components/layer-info';
 import { cn } from '@/lib/utils';
 import { ImageStore } from '@/store/image-store';
 import { LayersStore } from '@/store/layers-store';
 
-export const LayersSidebar = () => {
+export const Layers = () => {
   const generating = ImageStore.useStore((state) => state.generating);
   const layers = LayersStore.useStore((state) => state.layers);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);

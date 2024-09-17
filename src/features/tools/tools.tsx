@@ -1,8 +1,8 @@
-import { BgRemove } from '@/components/tools-sidebar/image-tools/bg-remove';
-import { BgReplace } from '@/components/tools-sidebar/image-tools/bg-replace';
-import { GenRemove } from '@/components/tools-sidebar/image-tools/gen-remove';
+import { BgRemove } from '@/features/tools/image-tools/bg-remove';
+import { BgReplace } from '@/features/tools/image-tools/bg-replace';
+import { GenRemove } from '@/features/tools/image-tools/gen-remove';
 
-export const ToolsSidebar = () => (
+export const Tools = () => (
   <>
     <div className="flex flex-col gap-4 p-4">
       <div className="hidden flex-col text-left md:flex">
