@@ -2,7 +2,7 @@
 
 import { actionClient } from '@/lib/safe-action';
 import { Cloudinary } from '@/services/cloudinary';
-import { bgRemoveSchema } from '@/services/validations';
+import { bgRemoveSchema } from '@/services/cloudinary/validations';
 
 export const bgRemove = actionClient
   .metadata({ actionName: 'bgRemove' })

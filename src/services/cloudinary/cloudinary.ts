@@ -6,7 +6,7 @@ import {
   bgReplaceProps,
   GenRemoveProps,
   UploadImageProps,
-} from '@/services/validations';
+} from '@/services/cloudinary/validations';
 import {
   canFetchFromUrl,
   createGenerator,

@@ -3,6 +3,7 @@
     "CLOUDINARY",
     "clsx",
     "Fetchable",
+    "hookform",
     "immer",
     "lucide",
     "persistor",

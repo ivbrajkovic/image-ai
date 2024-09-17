@@ -2,7 +2,7 @@
 
 import { actionClient } from '@/lib/safe-action';
 import { Cloudinary } from '@/services/cloudinary';
-import { bgReplaceSchema } from '@/services/validations';
+import { bgReplaceSchema } from '@/services/cloudinary/validations';
 
 export const bgReplace = actionClient
   .metadata({ actionName: 'bgReplace' })
