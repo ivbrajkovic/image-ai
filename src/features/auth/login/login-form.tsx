@@ -36,14 +36,9 @@ export const LoginForm = () => {
     zodResolver(loginSchema),
     {
       actionProps: {
-        onSuccess: (res) => {
-          console.log('success', res);
-        },
         onError: (error) => {
-          console.log('error', error);
-        },
-        onSettled: () => {
-          console.log('settled');
+          // TODO: Show toast with error message
+          console.error('error', error);
         },
       },
       formProps: {
