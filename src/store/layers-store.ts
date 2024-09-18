@@ -25,8 +25,6 @@ export type LayerActions = {
   removeLayer: (id: string) => void;
   updateLayer: (layer: Layer) => void;
   setActiveLayer: (id: string) => void;
-  setTranscriptionUrl: (id: string, transcriptionUrl: string) => void;
-  setComparisonMode: (mode: boolean) => void;
   setComparedLayerIds: (ids: string[]) => void;
   toggleComparedLayerId: (id: string) => void;
 };
@@ -58,25 +56,13 @@ const createLayerStore = (initialState: {
         updateLayer: (layer) =>
           set((state) => {
             const index = state.layers.findIndex((l) => l.id === layer.id);
-            state.layers[index] = layer;
+            if (index !== -1) state.layers[index] = layer;
           }),
 
         setActiveLayer: (id) =>
           set((state) => {
             const layer = state.layers.find((layer) => layer.id === id);
             state.activeLayer = layer ?? state.layers[0];
-          }),
-
-        setTranscriptionUrl: (id, transcriptionUrl) =>
-          set((state) => {
-            const index = state.layers.findIndex((layer) => layer.id === id);
-            state.layers[index].transcriptionUrl = transcriptionUrl;
-          }),
-
-        setComparisonMode: (mode) =>
-          set((state) => {
-            state.comparisonMode = mode;
-            state.comparedLayersId = [];
           }),
 
         setComparedLayerIds: (ids) =>
@@ -87,9 +73,15 @@ const createLayerStore = (initialState: {
 
         toggleComparedLayerId: (id) =>
           set((state) => {
-            const index = state.comparedLayersId.indexOf(id);
-            if (index === -1) state.comparedLayersId.push(id);
-            else state.comparedLayersId.splice(index, 1);
+            if (state.comparedLayersId.includes(id)) {
+              state.comparedLayersId = state.comparedLayersId.filter(
+                (layerId) => layerId !== id,
+              );
+            } else if (state.comparedLayersId.length < 2) {
+              state.comparedLayersId.push(id);
+            } else {
+              state.comparedLayersId[1] = id;
+            }
             state.comparisonMode = state.comparedLayersId.length > 0;
           }),
       })),

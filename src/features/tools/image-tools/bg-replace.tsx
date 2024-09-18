@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/popover';
 import { ActionButton } from '@/features/tools/components/action-button';
 import { useAddImageLayer } from '@/features/tools/image-tools/hooks/useAddImageLayer';
-import { useRenderCount } from '@/hooks/use-render-count';
+import { useToast } from '@/hooks/use-toast';
 import { bgReplace } from '@/server/bg-replace-action';
 import { ImageStore } from '@/store/image-store';
 import { LayersStore } from '@/store/layers-store';
@@ -21,7 +21,7 @@ import { LayersStore } from '@/store/layers-store';
 type FormValues = { prompt: string };
 
 export const BgReplace = () => {
-  useRenderCount('BgReplace');
+  const { toast } = useToast();
 
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
@@ -40,7 +40,13 @@ export const BgReplace = () => {
         addImageLayer({ url: response.data.url });
         form.resetField('prompt');
       })
-      .catch(console.error)
+      .catch((error) => {
+        toast({
+          variant: 'destructive',
+          title: 'Failed to replace background',
+          description: error.message,
+        });
+      })
       .finally(() => setGenerating(false));
   };
 

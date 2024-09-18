@@ -10,13 +10,13 @@ import {
 } from '@/components/ui/popover';
 import { ActionButton } from '@/features/tools/components/action-button';
 import { useAddImageLayer } from '@/features/tools/image-tools/hooks/useAddImageLayer';
-import { useRenderCount } from '@/hooks/use-render-count';
+import { useToast } from '@/hooks/use-toast';
 import { bgRemove } from '@/server/bg-remove-action';
 import { ImageStore } from '@/store/image-store';
 import { LayersStore } from '@/store/layers-store';
 
 export const BgRemove = () => {
-  useRenderCount('BgRemove');
+  const { toast } = useToast();
 
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
@@ -26,16 +26,20 @@ export const BgRemove = () => {
   const handleRemove = () => {
     if (!activeLayer.url) throw new Error('No active layer');
     if (!activeLayer.format) throw new Error('No active layer format');
-
     setGenerating(true);
-
     bgRemove({ format: activeLayer.format, url: activeLayer.url })
       .then((response) => {
         if (response?.serverError) throw new Error(response.serverError);
         if (!response?.data?.url) throw new Error('No URL returned');
         addImageLayer({ url: response.data.url, format: 'png' });
       })
-      .catch(console.error)
+      .catch((error) => {
+        toast({
+          variant: 'destructive',
+          title: 'Failed to remove background',
+          description: error.message,
+        });
+      })
       .finally(() => setGenerating(false));
   };
 

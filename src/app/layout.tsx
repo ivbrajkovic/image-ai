@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
 import { Copyright } from '@/components/copyright/copyright';
+import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import { ThemeProvider } from '@/theme/theme-provider';
 
@@ -30,6 +31,7 @@ export default function RootLayout({
         >
           {children}
           <Copyright />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
