@@ -1,10 +1,10 @@
 'use server';
 
-import { actionClient } from '@/lib/safe-action';
+import { authActionClient } from '@/lib/safe-action';
 import { Cloudinary } from '@/services/cloudinary';
 import { bgReplaceSchema } from '@/services/cloudinary/validations';
 
-export const bgReplace = actionClient
+export const bgReplace = authActionClient
   .metadata({ actionName: 'bgReplace' })
   .schema(bgReplaceSchema)
   .action(({ parsedInput }) => {

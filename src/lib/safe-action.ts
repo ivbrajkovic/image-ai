@@ -1,13 +1,10 @@
-import { cookies } from 'next/headers';
 import {
   createSafeActionClient,
   DEFAULT_SERVER_ERROR_MESSAGE,
 } from 'next-safe-action';
 import { z } from 'zod';
 
-const getUserIdFromSessionId = async (_session: string) => {
-  return 'userId';
-};
+import { checkUser } from '@/server/check-user';
 
 export const actionClient = createSafeActionClient({
   defineMetadataSchema() {
@@ -21,12 +18,6 @@ export const actionClient = createSafeActionClient({
 
 export const authActionClient = actionClient //
   .use(async ({ next }) => {
-    const session = cookies().get('session')?.value;
-    if (!session) throw new Error('Session not found!');
-
-    const userId = await getUserIdFromSessionId(session);
-    if (!userId) throw new Error('Session is not valid!');
-
-    // Return the next middleware with `userId` value in the context
-    return next({ ctx: { userId } });
+    const user = await checkUser();
+    return next({ ctx: { user } });
   });

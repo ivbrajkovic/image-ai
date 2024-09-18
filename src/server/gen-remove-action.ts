@@ -1,10 +1,10 @@
 'use server';
 
-import { actionClient } from '@/lib/safe-action';
+import { authActionClient } from '@/lib/safe-action';
 import { Cloudinary } from '@/services/cloudinary';
 import { genRemoveSchema } from '@/services/cloudinary/validations';
 
-export const genRemove = actionClient
+export const genRemove = authActionClient
   .metadata({ actionName: 'genRemove' })
   .schema(genRemoveSchema)
   .action(({ parsedInput }) => {
