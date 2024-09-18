@@ -26,8 +26,7 @@ export const ImageComparison = () => {
       {comparisonLayers.length === 1 ? (
         <div className="relative flex size-full items-center justify-center">
           <ReactCompareSliderImage
-            src={comparisonLayers[0].url || ''}
-            srcSet={comparisonLayers[0].url || ''}
+            src={comparisonLayers[0].url}
             alt={comparisonLayers[0].name || 'Single image'}
             className="absolute inset-0 rounded-lg !object-contain"
           />
@@ -37,16 +36,14 @@ export const ImageComparison = () => {
           className="relative flex size-full items-center justify-center"
           itemOne={
             <ReactCompareSliderImage
-              src={comparisonLayers[0].url || ''}
-              srcSet={comparisonLayers[0].url || ''}
+              src={comparisonLayers[0].url}
               alt={comparisonLayers[0].name || 'Image one'}
               className="absolute inset-0 rounded-lg !object-contain"
             />
           }
           itemTwo={
             <ReactCompareSliderImage
-              src={comparisonLayers[1].url || ''}
-              srcSet={comparisonLayers[1].url || ''}
+              src={comparisonLayers[1].url}
               alt={comparisonLayers[1].name || 'Image two'}
               className="absolute inset-0 rounded-lg !object-contain"
             />
