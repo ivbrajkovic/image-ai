@@ -47,7 +47,7 @@ export const BgRemove = () => {
           <span className="text-sm">Background Removal</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full">
+      <PopoverContent className="w-80">
         <div className="mb-4">
           <h3>Background Removal</h3>
           <p className="text-sm text-muted-foreground">

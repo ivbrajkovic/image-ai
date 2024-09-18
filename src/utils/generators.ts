@@ -30,10 +30,13 @@ export function withRetrial(maxRetries: number) {
   };
 }
 
-export const canFetchFromUrl = (url: string) =>
+export const readyToFetchFromUrl = (url: string): Promise<boolean> =>
   fetch(url)
     .then((response) => {
-      // console.log({ response });
-      return response.ok;
+      if (response.ok) return true;
+      if (response.status === 423) return false;
+      throw new Error(response.statusText);
     })
-    .catch(() => false);
+    .catch((error) => {
+      throw new Error('Failed to fetch: ' + error.message);
+    });

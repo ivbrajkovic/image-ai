@@ -105,7 +105,7 @@ export const Layers = () => {
             onClick={handleSetActiveLayer(layer.id)}
           >
             <div className="relative flex items-center p-4">
-              <div className="flex h-8 w-full items-center justify-between gap-2">
+              <div className="flex h-4 w-full items-center justify-between gap-2 md:h-8">
                 {!layer.url ? (
                   <p className="justify-self-end text-sm font-medium">
                     New Layer

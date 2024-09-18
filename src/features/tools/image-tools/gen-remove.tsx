@@ -52,7 +52,7 @@ export const GenRemove = () => {
           <span className="text-sm">Content Removal</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-full">
+      <PopoverContent className="w-80">
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="mb-4">
             <h3>Smart Ai Remove</h3>
@@ -61,7 +61,7 @@ export const GenRemove = () => {
             </p>
           </div>
           <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="selection">Selection</Label>
+            <Label htmlFor="selection">Prompt</Label>
             <Input
               className="col-span-2 h-8"
               {...form.register('prompt', { required: true })}

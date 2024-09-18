@@ -8,7 +8,7 @@ import {
   UploadImageProps,
 } from '@/services/cloudinary/validations';
 import {
-  canFetchFromUrl,
+  readyToFetchFromUrl,
   createGenerator,
   withInterval,
   withRetrial,
@@ -65,7 +65,7 @@ export class Cloudinary {
     const removeUrl = `${parts[0]}/upload/e_gen_remove:${props.prompt}/${parts[1]}`;
 
     const pipeline = pipe(
-      createGenerator(canFetchFromUrl),
+      createGenerator(readyToFetchFromUrl),
       withInterval(1000),
       withRetrial(20),
     );
@@ -85,7 +85,7 @@ export class Cloudinary {
     const bgRemoveUrl = `${urlParts[0]}/upload/e_background_removal/${urlParts[1]}`;
 
     const pipeline = pipe(
-      createGenerator(canFetchFromUrl),
+      createGenerator(readyToFetchFromUrl),
       withInterval(1000),
       withRetrial(20),
     );
@@ -106,9 +106,9 @@ export class Cloudinary {
       : `${urlParts[0]}/upload/e_gen_background_replace/${urlParts[1]}`;
 
     const pipeline = pipe(
-      createGenerator(canFetchFromUrl),
+      createGenerator(readyToFetchFromUrl),
       withInterval(1000),
-      withRetrial(20),
+      withRetrial(60),
     );
 
     for await (const result of pipeline(bgReplaceUrl)) {

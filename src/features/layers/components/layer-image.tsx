@@ -21,7 +21,7 @@ export const LayerImage = ({ url, name, format }: LayerImageProps) => {
         className="rounded-sm object-contain"
       />
       <div>
-        <p className="text-sm">{formatText}</p>
+        <p className="text-xs md:text-sm">{formatText}</p>
       </div>
     </div>
   );
