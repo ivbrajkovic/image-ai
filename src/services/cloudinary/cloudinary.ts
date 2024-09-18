@@ -4,6 +4,7 @@ import pipe from 'lodash/fp/pipe';
 import {
   BgRemoveProps,
   bgReplaceProps,
+  CartoonifyProps,
   GenRemoveProps,
   UploadImageProps,
 } from '@/services/cloudinary/validations';
@@ -30,6 +31,22 @@ export class Cloudinary {
       api_key: process.env.CLOUDINARY_KEY,
       api_secret: process.env.CLOUDINARY_SECRET,
     });
+  }
+
+  async #waitForImageReady(url: string) {
+    const imageFetchPipeline = pipe(
+      createGenerator(readyToFetchFromUrl),
+      withInterval(1000),
+      withRetrial(20),
+    );
+
+    for await (const result of imageFetchPipeline(url)) {
+      if (result instanceof Error)
+        throw new Error(`Image processing failed: ${result.message}.`);
+      if (result) return { url };
+    }
+
+    throw new Error('Image processing failed: Max retries exceeded.');
   }
 
   async uploadImage(props: UploadImageProps) {
@@ -60,63 +77,30 @@ export class Cloudinary {
     });
   }
 
-  async genRemove(props: GenRemoveProps) {
-    const parts = props.url.split('/upload/');
-    const removeUrl = `${parts[0]}/upload/e_gen_remove:${props.prompt}/${parts[1]}`;
-
-    const pipeline = pipe(
-      createGenerator(readyToFetchFromUrl),
-      withInterval(1000),
-      withRetrial(20),
-    );
-
-    for await (const result of pipeline(removeUrl)) {
-      if (result instanceof Error)
-        throw new Error(`Image processing failed: ${result.message}.`);
-      if (result) return { url: removeUrl };
-    }
-
-    throw new Error('Image processing failed: Max retries exceeded.');
+  genRemove(props: GenRemoveProps) {
+    const urlSegments = props.url.split('/upload/');
+    const processedImageUrl = `${urlSegments[0]}/upload/e_gen_remove:${props.prompt}/${urlSegments[1]}`;
+    return this.#waitForImageReady(processedImageUrl);
   }
 
-  async bgRemove(props: BgRemoveProps) {
-    const urlWithReplacedFormat = props.url.replace(props.format, 'png');
-    const urlParts = urlWithReplacedFormat.split('/upload/');
-    const bgRemoveUrl = `${urlParts[0]}/upload/e_background_removal/${urlParts[1]}`;
-
-    const pipeline = pipe(
-      createGenerator(readyToFetchFromUrl),
-      withInterval(1000),
-      withRetrial(20),
-    );
-
-    for await (const result of pipeline(bgRemoveUrl)) {
-      if (result instanceof Error)
-        throw new Error(`Image processing failed: ${result.message}.`);
-      if (result) return { url: bgRemoveUrl };
-    }
-
-    throw new Error('Image processing failed: Max retries exceeded.');
+  bgRemove(props: BgRemoveProps) {
+    const urlWithPngFormat = props.url.replace(props.format, 'png');
+    const urlSegments = urlWithPngFormat.split('/upload/');
+    const processedImageUrl = `${urlSegments[0]}/upload/e_background_removal/${urlSegments[1]}`;
+    return this.#waitForImageReady(processedImageUrl);
   }
 
-  async bgReplace(props: bgReplaceProps) {
-    const urlParts = props.url.split('/upload/');
-    const bgReplaceUrl = props.prompt
-      ? `${urlParts[0]}/upload/e_gen_background_replace:prompt_${props.prompt}/${urlParts[1]}`
-      : `${urlParts[0]}/upload/e_gen_background_replace/${urlParts[1]}`;
+  bgReplace(props: bgReplaceProps) {
+    const urlSegments = props.url.split('/upload/');
+    const processedImageUrl = props.prompt
+      ? `${urlSegments[0]}/upload/e_gen_background_replace:prompt_${props.prompt}/${urlSegments[1]}`
+      : `${urlSegments[0]}/upload/e_gen_background_replace/${urlSegments[1]}`;
+    return this.#waitForImageReady(processedImageUrl);
+  }
 
-    const pipeline = pipe(
-      createGenerator(readyToFetchFromUrl),
-      withInterval(1000),
-      withRetrial(60),
-    );
-
-    for await (const result of pipeline(bgReplaceUrl)) {
-      if (result instanceof Error)
-        throw new Error(`Image processing failed: ${result.message}.`);
-      if (result) return { url: bgReplaceUrl };
-    }
-
-    throw new Error('Image processing failed: Max retries exceeded.');
+  async cartoonify(props: CartoonifyProps) {
+    const urlSegments = props.url.split('/upload/');
+    const processedImageUrl = `${urlSegments[0]}/upload/e_cartoonify/${urlSegments[1]}`;
+    return this.#waitForImageReady(processedImageUrl);
   }
 }

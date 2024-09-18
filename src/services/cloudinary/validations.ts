@@ -23,3 +23,8 @@ export const bgReplaceSchema = z.object({
   prompt: z.string(),
   url: z.string(),
 });
+
+export type CartoonifyProps = z.infer<typeof cartoonifySchema>;
+export const cartoonifySchema = z.object({
+  url: z.string(),
+});

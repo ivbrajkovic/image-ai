@@ -1,11 +1,8 @@
 'use client';
 
-import { Eraser } from 'lucide-react';
-import { useForm } from 'react-hook-form';
+import { Image as ImageIcon } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import {
   Popover,
   PopoverContent,
@@ -14,36 +11,32 @@ import {
 import { ActionButton } from '@/features/tools/components/action-button';
 import { useAddImageLayer } from '@/features/tools/image-tools/hooks/useAddImageLayer';
 import { useToast } from '@/hooks/use-toast';
-import { genRemove } from '@/server/gen-remove-action';
+import { cartoonify } from '@/server/cartoonify-action';
 import { ImageStore } from '@/store/image-store';
 import { LayersStore } from '@/store/layers-store';
 
-type FormValues = { prompt: string };
-
-export const GenRemove = () => {
+export const Cartoonify = () => {
   const { toast } = useToast();
 
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
 
-  const form = useForm<FormValues>({ defaultValues: { prompt: '' } });
   const { addImageLayer } = useAddImageLayer();
 
-  const handleSubmit = ({ prompt }: FormValues) => {
+  const handleClick = () => {
     if (!activeLayer.url) throw new Error('No active layer');
+    if (!activeLayer.format) throw new Error('No active layer format');
     setGenerating(true);
-
-    genRemove({ prompt, url: activeLayer.url })
+    cartoonify({ url: activeLayer.url })
       .then((response) => {
         if (response?.serverError) throw new Error(response.serverError);
         if (!response?.data?.url) throw new Error('No URL returned');
-        addImageLayer({ url: response.data.url });
-        form.resetField('prompt');
+        addImageLayer({ url: response.data.url, format: 'png' });
       })
       .catch((error) => {
         toast({
           variant: 'destructive',
-          title: 'Failed to remove content',
+          title: 'Failed to remove background',
           description: error.message,
         });
       })
@@ -54,29 +47,20 @@ export const GenRemove = () => {
     <Popover>
       <PopoverTrigger asChild disabled={!activeLayer.url}>
         <Button className="flex items-center justify-start gap-4">
-          <Eraser size={16} />
-          <span className="text-sm">Content Removal</span>
+          <ImageIcon size={16} />
+          <span className="text-sm">Cartoonify</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">
-        <form onSubmit={form.handleSubmit(handleSubmit)}>
-          <div className="mb-4">
-            <h3>Smart Ai Remove</h3>
-            <p className="text-sm text-muted-foreground">
-              Generative Remove any part of the image
-            </p>
-          </div>
-          <div className="grid grid-cols-3 items-center gap-4">
-            <Label htmlFor="selection">Prompt</Label>
-            <Input
-              className="col-span-2 h-8"
-              {...form.register('prompt', { required: true })}
-            />
-          </div>
-          <ActionButton type="submit" disabled={!activeLayer.url}>
-            Remove Content
-          </ActionButton>
-        </form>
+        <div className="mb-4">
+          <h3>Cartoonify</h3>
+          <p className="text-sm text-muted-foreground">
+            Convert the image into a cartoon.
+          </p>
+        </div>
+        <ActionButton disabled={!activeLayer.url} onClick={handleClick}>
+          Cartoonify Image
+        </ActionButton>
       </PopoverContent>
     </Popover>
   );

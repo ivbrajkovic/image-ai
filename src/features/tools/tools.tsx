@@ -1,5 +1,6 @@
 import { BgRemove } from '@/features/tools/image-tools/bg-remove';
 import { BgReplace } from '@/features/tools/image-tools/bg-replace';
+import { Cartoonify } from '@/features/tools/image-tools/cartoonify';
 import { GenRemove } from '@/features/tools/image-tools/gen-remove';
 
 export const Tools = () => (
@@ -14,6 +15,7 @@ export const Tools = () => (
       <GenRemove />
       <BgRemove />
       <BgReplace />
+      <Cartoonify />
     </div>
   </>
 );

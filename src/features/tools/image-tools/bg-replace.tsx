@@ -74,7 +74,7 @@ export const BgReplace = () => {
             />
           </div>
           <ActionButton type="submit" disabled={!activeLayer.url}>
-            Remove Background
+            Replace Background
           </ActionButton>
         </form>
       </PopoverContent>
