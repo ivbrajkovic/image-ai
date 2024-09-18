@@ -32,31 +32,31 @@ export class Cloudinary {
     });
   }
 
-  uploadImage(props: UploadImageProps) {
+  async uploadImage(props: UploadImageProps) {
+    const arrayBuffer = await props.image.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
     return new Promise<UploadApiResponse>(async (resolve, reject) => {
-      const arrayBuffer = await props.image.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
+      this.#cloudinary.uploader
+        .upload_stream(
+          // { upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET },
+          (error, result) => {
+            if (error) {
+              const errorMessage = `Image upload failed: ${error?.message}`;
+              console.error(errorMessage, error);
+              return reject(new Error(errorMessage));
+            }
 
-      const uploadStream = this.#cloudinary.uploader.upload_stream(
-        { upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET },
-        (error, result) => {
-          if (error) {
-            const errorMessage = `Image upload failed: ${error?.message}`;
-            console.error(errorMessage, error);
-            return reject(new Error(errorMessage));
-          }
+            if (!result) {
+              const errorMessage = 'Image upload failed: No result received';
+              console.error(errorMessage);
+              return reject(new Error(errorMessage));
+            }
 
-          if (!result) {
-            const errorMessage = 'Image upload failed: No result received';
-            console.error(errorMessage);
-            return reject(new Error(errorMessage));
-          }
-
-          return resolve(result);
-        },
-      );
-
-      uploadStream.end(buffer);
+            return resolve(result);
+          },
+        )
+        .end(buffer);
     });
   }
 

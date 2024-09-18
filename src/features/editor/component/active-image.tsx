@@ -15,7 +15,7 @@ export const ActiveImage = () => {
       <div className="relative flex size-full items-center justify-center">
         <Image
           fill
-          src={activeLayer.url!}
+          src={activeLayer.url}
           alt={activeLayer.name!}
           className={cn(
             'rounded-lg object-contain',
