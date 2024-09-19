@@ -58,7 +58,7 @@ export function createGenerator<T, R>(callback: (args: T) => Promise<R>) {
 }
 
 export function withInterval(interval: number) {
-  return async function* <T>(generator: AsyncGenerator<T>) {
+  return async function* <T>(generator: AsyncGenerator<T>): AsyncGenerator<T> {
     for await (const value of generator) {
       yield value;
       await wait(interval);
@@ -67,12 +67,35 @@ export function withInterval(interval: number) {
 }
 
 export function withRetrial(maxRetries: number) {
-  return async function* <T>(generator: AsyncGenerator<T>) {
+  return async function* <T>(generator: AsyncGenerator<T>): AsyncGenerator<T> {
     for await (const value of generator) {
       yield value;
       if (--maxRetries <= 0) break;
     }
   };
+}
+
+export const map = <T, R>(callback: (value: T) => Promise<R> | R) =>
+  async function* (generator: AsyncGenerator<T>): AsyncGenerator<R> {
+    for await (const value of generator) {
+      yield await callback(value);
+    }
+  };
+
+export const until = <T>(predicate: (value: T) => Promise<boolean> | boolean) =>
+  async function* (generator: AsyncGenerator<T>): AsyncGenerator<T> {
+    for await (const value of generator) {
+      const stop = await predicate(value);
+      if (stop) break;
+      yield value;
+    }
+  };
+
+export async function consumeFirst<T>(
+  generator: AsyncGenerator<T | undefined>,
+): Promise<T | undefined> {
+  for await (const result of generator) if (result !== undefined) return result; // Return the first non-undefined result
+  return undefined; // If no valid result is found, return undefined
 }
 
 export const readyToFetchFromUrl = (
@@ -83,6 +106,3 @@ export const readyToFetchFromUrl = (
     if (response.status === 423) return { isReadyToFetch: false };
     throw new Error(response.statusText);
   });
-// .catch((error) => {
-//   throw new Error('Failed to fetch: ' + error.message);
-// });

@@ -13,6 +13,9 @@ import {
   createGenerator,
   withInterval,
   withRetrial,
+  map,
+  until,
+  consumeFirst,
 } from '@/utils/generators';
 
 const RETRIAL_LIMIT = 60;
@@ -49,6 +52,25 @@ export class Cloudinary {
     }
 
     throw new Error('Image processing failed: Max retries exceeded.');
+  }
+
+  async #waitForImageReady_alternate(url: string) {
+    const imageFetchPipeline = pipe(
+      createGenerator(readyToFetchFromUrl),
+      withInterval(RETRIAL_INTERVAL),
+      withRetrial(RETRIAL_LIMIT),
+      map(({ error, data }) => {
+        if (error) throw error.prefixMessage(`Image processing failed`);
+        return data.isReadyToFetch;
+      }),
+      until((isReadyToFetch) => isReadyToFetch),
+    );
+
+    const result = await consumeFirst(imageFetchPipeline(url));
+    if (!result)
+      throw new Error('Image processing failed: Max retries exceeded.');
+
+    return { url };
   }
 
   async uploadImage(props: UploadImageProps) {
