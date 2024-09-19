@@ -22,12 +22,18 @@ type FormValues = { prompt: string };
 
 export const GenRemove = () => {
   const { toast } = useToast();
+  const { addImageLayer } = useAddImageLayer();
+  const form = useForm<FormValues>({ defaultValues: { prompt: '' } });
 
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
 
-  const form = useForm<FormValues>({ defaultValues: { prompt: '' } });
-  const { addImageLayer } = useAddImageLayer();
+  const errorToast = (description: string) =>
+    toast({
+      variant: 'destructive',
+      title: 'Failed to remove content',
+      description,
+    });
 
   const handleSubmit = ({ prompt }: FormValues) => {
     if (!activeLayer.url) throw new Error('No active layer');
@@ -35,17 +41,10 @@ export const GenRemove = () => {
 
     genRemove({ prompt, url: activeLayer.url })
       .then((response) => {
-        if (response?.serverError) throw new Error(response.serverError);
-        if (!response?.data?.url) throw new Error('No URL returned');
+        if (response?.serverError) return errorToast(response.serverError);
+        if (!response?.data?.url) return errorToast('No image URL received');
         addImageLayer({ url: response.data.url });
         form.resetField('prompt');
-      })
-      .catch((error) => {
-        toast({
-          variant: 'destructive',
-          title: 'Failed to remove content',
-          description: error.message,
-        });
       })
       .finally(() => setGenerating(false));
   };

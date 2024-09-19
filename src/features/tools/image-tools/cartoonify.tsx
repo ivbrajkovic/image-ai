@@ -17,11 +17,17 @@ import { LayersStore } from '@/store/layers-store';
 
 export const Cartoonify = () => {
   const { toast } = useToast();
+  const { addImageLayer } = useAddImageLayer();
 
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
 
-  const { addImageLayer } = useAddImageLayer();
+  const errorToast = (description: string) =>
+    toast({
+      variant: 'destructive',
+      title: 'Failed to cartoonify image',
+      description,
+    });
 
   const handleClick = () => {
     if (!activeLayer.url) throw new Error('No active layer');
@@ -29,16 +35,9 @@ export const Cartoonify = () => {
     setGenerating(true);
     cartoonify({ url: activeLayer.url })
       .then((response) => {
-        if (response?.serverError) throw new Error(response.serverError);
-        if (!response?.data?.url) throw new Error('No URL returned');
+        if (response?.serverError) return errorToast(response.serverError);
+        if (!response?.data?.url) return errorToast('No image URL received');
         addImageLayer({ url: response.data.url, format: 'png' });
-      })
-      .catch((error) => {
-        toast({
-          variant: 'destructive',
-          title: 'Failed to remove background',
-          description: error.message,
-        });
       })
       .finally(() => setGenerating(false));
   };

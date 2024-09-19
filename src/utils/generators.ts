@@ -1,13 +1,58 @@
 import { wait } from '@/utils/wait';
 
-type FnAsync<T, R> = (args: T) => Promise<R>;
+export class GeneratorError extends Error {
+  static from(error: unknown) {
+    if (error instanceof GeneratorError) return error;
+    if (error instanceof Error) return new GeneratorError(error.message);
+    if (typeof error === 'string') return new GeneratorError(error);
 
-export function createGenerator<T, R>(callback: FnAsync<T, R | Error>) {
-  return async function* createGenerator(args: T) {
+    if (typeof error === 'object' && error !== null) {
+      try {
+        // Attempt to stringify the object, handling potential errors
+        return new GeneratorError(JSON.stringify(error));
+      } catch (jsonError) {
+        // If JSON.stringify fails (due to circular reference or other issue), return a more informative message
+        return new GeneratorError(
+          `An error occurred while serializing the object: ${(jsonError as Error).message}`,
+        );
+      }
+    }
+
+    const unsupportedType = typeof error;
+    return unsupportedType === 'function' ||
+      unsupportedType === 'boolean' ||
+      unsupportedType === 'number' ||
+      unsupportedType === 'bigint' ||
+      unsupportedType === 'symbol'
+      ? new GeneratorError(`Unsupported error type: ${unsupportedType}`)
+      : new GeneratorError('An unknown error occurred.');
+  }
+
+  constructor(message: string) {
+    super(message);
+    this.name = 'GeneratorError';
+    Error.captureStackTrace(this, GeneratorError);
+  }
+
+  prefixMessage(prefix: string) {
+    if (!this.message.startsWith(prefix))
+      this.message = `${prefix}: ${this.message}`;
+    return this;
+  }
+}
+
+type GeneratorResult<R> =
+  | { data: R; error?: never }
+  | { data?: never; error: GeneratorError };
+
+export function createGenerator<T, R>(callback: (args: T) => Promise<R>) {
+  return async function* createGenerator(
+    args: T,
+  ): AsyncGenerator<GeneratorResult<R>> {
     try {
-      while (true) yield await callback(args);
+      while (true) yield { data: await callback(args) };
     } catch (error) {
-      yield error as Error;
+      yield { error: GeneratorError.from(error) };
     }
   };
 }
@@ -30,13 +75,14 @@ export function withRetrial(maxRetries: number) {
   };
 }
 
-export const readyToFetchFromUrl = (url: string): Promise<boolean> =>
-  fetch(url)
-    .then((response) => {
-      if (response.ok) return true;
-      if (response.status === 423) return false;
-      throw new Error(response.statusText);
-    })
-    .catch((error) => {
-      throw new Error('Failed to fetch: ' + error.message);
-    });
+export const readyToFetchFromUrl = (
+  url: string,
+): Promise<{ isReadyToFetch: boolean }> =>
+  fetch(url).then((response) => {
+    if (response.ok) return { isReadyToFetch: true };
+    if (response.status === 423) return { isReadyToFetch: false };
+    throw new Error(response.statusText);
+  });
+// .catch((error) => {
+//   throw new Error('Failed to fetch: ' + error.message);
+// });

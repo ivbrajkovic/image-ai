@@ -15,6 +15,9 @@ import {
   withRetrial,
 } from '@/utils/generators';
 
+const RETRIAL_LIMIT = 60;
+const RETRIAL_INTERVAL = 1000;
+
 export class Cloudinary {
   static #instance: Cloudinary;
   #cloudinary: typeof v2;
@@ -36,14 +39,13 @@ export class Cloudinary {
   async #waitForImageReady(url: string) {
     const imageFetchPipeline = pipe(
       createGenerator(readyToFetchFromUrl),
-      withInterval(1000),
-      withRetrial(20),
+      withInterval(RETRIAL_INTERVAL),
+      withRetrial(RETRIAL_LIMIT),
     );
 
-    for await (const result of imageFetchPipeline(url)) {
-      if (result instanceof Error)
-        throw new Error(`Image processing failed: ${result.message}.`);
-      if (result) return { url };
+    for await (const { error, data } of imageFetchPipeline(url)) {
+      if (error) throw error.prefixMessage(`Image processing failed`);
+      if (data.isReadyToFetch) return { url };
     }
 
     throw new Error('Image processing failed: Max retries exceeded.');
@@ -98,7 +100,7 @@ export class Cloudinary {
     return this.#waitForImageReady(processedImageUrl);
   }
 
-  async cartoonify(props: CartoonifyProps) {
+  cartoonify(props: CartoonifyProps) {
     const urlSegments = props.url.split('/upload/');
     const processedImageUrl = `${urlSegments[0]}/upload/e_cartoonify/${urlSegments[1]}`;
     return this.#waitForImageReady(processedImageUrl);
