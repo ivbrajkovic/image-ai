@@ -37,6 +37,8 @@ export const BgRemove = () => {
       .then((response) => {
         if (response?.serverError) return errorToast(response.serverError);
         if (!response?.data?.url) return errorToast('No image URL received');
+
+        // TODO: Add layer to supabase and get the id
         addImageLayer({ url: response.data.url, format: 'png' });
       })
       .finally(() => setGenerating(false));

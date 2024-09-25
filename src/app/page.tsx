@@ -8,7 +8,9 @@ import { createClient } from '@/supabase/server';
 
 export default async function Home() {
   const supabase = createClient();
-  const { data: layers = [] } = await supabase.from('layers').select('*');
+  const { data } = await supabase.from('layers').select('*');
+  const layers = data ?? [];
+
   console.log({ layers });
 
   return (
@@ -18,7 +20,7 @@ export default async function Home() {
         leftSidebar={<Tools />}
         rightSidebar={<Layers layers={layers} />}
       >
-        <Editor />
+        <Editor layers={layers} />
       </AppShell>
     </StoreProvider>
   );

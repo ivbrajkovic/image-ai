@@ -12,13 +12,14 @@ export const useAddImageLayer = () => {
 
     const newLayerId = crypto.randomUUID();
     const newName = incrementFilenameNumber(activeLayer.name);
-    addLayer({
+    const layer: Layer = {
       ...activeLayer,
       ...props,
       id: newLayerId,
       name: newName,
-    });
-    setActiveLayer(newLayerId);
+    };
+    addLayer(layer);
+    setActiveLayer(layer);
   };
 
   return { addImageLayer };

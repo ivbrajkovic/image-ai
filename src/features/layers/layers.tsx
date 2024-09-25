@@ -10,8 +10,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { AddLayerButton } from '@/features/layers/components/add-layer-button';
 import { ComparisonButton } from '@/features/layers/components/comparison-button';
+import { CreateLayerButton } from '@/features/layers/components/create-layer-button';
 import { LayerImage } from '@/features/layers/components/layer-image';
 import { LayerInfo } from '@/features/layers/components/layer-info';
 import { cn } from '@/lib/utils';
@@ -19,13 +19,13 @@ import { ImageStore } from '@/store/image-store';
 import { Layer, LayersStore } from '@/store/layers-store';
 
 type LayersProps = {
-  layers: Layer[] | null;
+  layers: Layer[];
 };
 
 export const Layers = (props: LayersProps) => {
-  // const layers = props.layers || [];
+  const layers = props.layers || [];
 
-  const layers = LayersStore.useStore((state) => state.layers);
+  // const layers = LayersStore.useStore((state) => state.layers);
   const generating = ImageStore.useStore((state) => state.generating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
   const setActiveLayer = LayersStore.useStore((state) => state.setActiveLayer);
@@ -45,10 +45,10 @@ export const Layers = (props: LayersProps) => {
     return layer?.url || '';
   };
 
-  const handleSetActiveLayer = (id: number) => () => {
+  const handleSetActiveLayer = (layer: Layer) => {
     if (generating) return;
-    else if (comparisonMode) toggleComparedLayerId(id);
-    else setActiveLayer(id);
+    else if (comparisonMode) toggleComparedLayerId(layer);
+    else setActiveLayer(layer);
   };
 
   const handleDeleteLayer = (id: number) => {
@@ -116,7 +116,7 @@ export const Layers = (props: LayersProps) => {
                   : activeLayer.id === layer.id,
               },
             )}
-            onClick={handleSetActiveLayer(layer.id)}
+            onClick={handleSetActiveLayer.bind(null, layer)}
           >
             <div className="relative flex items-center p-4">
               <div className="flex h-4 w-full items-center justify-between gap-2 md:h-8">
@@ -144,7 +144,7 @@ export const Layers = (props: LayersProps) => {
         ))}
       </CardContent>
       <div className="flex flex-col gap-2 bg-card p-2">
-        <AddLayerButton />
+        <CreateLayerButton />
         <ComparisonButton />
       </div>
     </Card>

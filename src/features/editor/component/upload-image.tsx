@@ -34,7 +34,7 @@ export const UploadImage = () => {
         height: 0,
         format: '',
       });
-      setActiveLayer(activeLayer.id);
+      setActiveLayer(activeLayer);
 
       const formData = new FormData(); // Server actions require FormData
       formData.append('image', acceptedFiles[0]);
@@ -54,7 +54,7 @@ export const UploadImage = () => {
           format: data.format,
         });
 
-      setActiveLayer(activeLayer.id);
+      setActiveLayer(activeLayer);
       setGenerating(false);
     },
   });

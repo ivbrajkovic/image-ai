@@ -26,7 +26,7 @@ export type LayerActions = {
   addLayer: (layer: Layer) => void;
   removeLayer: (id: number) => void;
   updateLayer: (layer: Layer) => void;
-  setActiveLayer: (id: number) => void;
+  setActiveLayer: (layer: Layer) => void;
   setComparedLayerIds: (ids: number[]) => void;
   toggleComparedLayerId: (id: number) => void;
 };
@@ -39,54 +39,55 @@ const createLayerStore = (initialState: {
 }) => {
   return createStore<LayerStore>()(
     persist(
-      immer((set) => ({
-        activeLayer: initialState.layers[0],
-        layers: initialState.layers,
-        comparisonMode: initialState.layerComparisonMode,
-        comparedLayersId: [],
+      immer((set) => {
+        return {
+          activeLayer: initialState.layers[0],
+          layers: initialState.layers,
+          comparisonMode: initialState.layerComparisonMode,
+          comparedLayersId: [],
 
-        addLayer: (layer) =>
-          set((state) => {
-            state.layers.push(layer);
-          }),
+          addLayer: (layer) =>
+            set((state) => {
+              state.layers.push(layer);
+            }),
 
-        removeLayer: (id) =>
-          set((state) => {
-            state.layers = state.layers.filter((layer) => layer.id !== id);
-          }),
+          removeLayer: (id) =>
+            set((state) => {
+              state.layers = state.layers.filter((layer) => layer.id !== id);
+            }),
 
-        updateLayer: (layer) =>
-          set((state) => {
-            const index = state.layers.findIndex((l) => l.id === layer.id);
-            if (index !== -1) state.layers[index] = layer;
-          }),
+          updateLayer: (layer) =>
+            set((state) => {
+              const index = state.layers.findIndex((l) => l.id === layer.id);
+              if (index !== -1) state.layers[index] = layer;
+            }),
 
-        setActiveLayer: (id) =>
-          set((state) => {
-            const layer = state.layers.find((layer) => layer.id === id);
-            state.activeLayer = layer ?? state.layers[0];
-          }),
+          setActiveLayer: (layer) =>
+            set((state) => {
+              state.activeLayer = layer;
+            }),
 
-        setComparedLayerIds: (ids) =>
-          set((state) => {
-            state.comparedLayersId = ids;
-            state.comparisonMode = ids.length > 0;
-          }),
+          setComparedLayerIds: (ids) =>
+            set((state) => {
+              state.comparedLayersId = ids;
+              state.comparisonMode = ids.length > 0;
+            }),
 
-        toggleComparedLayerId: (id) =>
-          set((state) => {
-            if (state.comparedLayersId.includes(id)) {
-              state.comparedLayersId = state.comparedLayersId.filter(
-                (layerId) => layerId !== id,
-              );
-            } else if (state.comparedLayersId.length < 2) {
-              state.comparedLayersId.push(id);
-            } else {
-              state.comparedLayersId[1] = id;
-            }
-            state.comparisonMode = state.comparedLayersId.length > 0;
-          }),
-      })),
+          toggleComparedLayerId: (id) =>
+            set((state) => {
+              if (state.comparedLayersId.includes(id)) {
+                state.comparedLayersId = state.comparedLayersId.filter(
+                  (layerId) => layerId !== id,
+                );
+              } else if (state.comparedLayersId.length < 2) {
+                state.comparedLayersId.push(id);
+              } else {
+                state.comparedLayersId[1] = id;
+              }
+              state.comparisonMode = state.comparedLayersId.length > 0;
+            }),
+        };
+      }),
       { name: 'layer-store' },
     ),
   );

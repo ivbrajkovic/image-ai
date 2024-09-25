@@ -5,17 +5,17 @@ import {
   ReactCompareSliderImage,
 } from 'react-compare-slider';
 
-import { LayersStore } from '@/store/layers-store';
+import { Layer, LayersStore } from '@/store/layers-store';
 
-export const ImageComparison = () => {
-  const layers = LayersStore.useStore((state) => state.layers);
+type ImageComparisonProps = { layers: Layer[] };
 
+export const ImageComparison = (props: ImageComparisonProps) => {
   const comparedLayersId = LayersStore.useStore(
     (state) => state.comparedLayersId,
   );
 
   const comparisonLayers = comparedLayersId.flatMap((id) => {
-    const layer = layers.find((layer) => layer.id === id);
+    const layer = props.layers.find((layer) => layer.id === id);
     return layer ? [layer] : [];
   });
 
@@ -26,8 +26,8 @@ export const ImageComparison = () => {
       {comparisonLayers.length === 1 ? (
         <div className="relative flex size-full items-center justify-center">
           <ReactCompareSliderImage
-            src={comparisonLayers[0].url}
-            alt={comparisonLayers[0].name || 'Single image'}
+            src={comparisonLayers[0].url ?? ''}
+            alt={comparisonLayers[0].name ?? 'Single image'}
             className="absolute inset-0 rounded-lg !object-contain"
           />
         </div>
@@ -36,15 +36,15 @@ export const ImageComparison = () => {
           className="relative flex size-full items-center justify-center"
           itemOne={
             <ReactCompareSliderImage
-              src={comparisonLayers[0].url}
-              alt={comparisonLayers[0].name || 'Image one'}
+              src={comparisonLayers[0].url ?? ''}
+              alt={comparisonLayers[0].name ?? 'Image one'}
               className="absolute inset-0 rounded-lg !object-contain"
             />
           }
           itemTwo={
             <ReactCompareSliderImage
-              src={comparisonLayers[1].url}
-              alt={comparisonLayers[1].name || 'Image two'}
+              src={comparisonLayers[1].url ?? ''}
+              alt={comparisonLayers[1].name ?? 'Image two'}
               className="absolute inset-0 rounded-lg !object-contain"
             />
           }
