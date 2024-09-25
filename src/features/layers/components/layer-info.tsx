@@ -11,27 +11,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Layer, LayersStore } from '@/store/layers-store';
+import { Layer } from '@/store/layers-store';
 import { stopPropagation } from '@/utils/stop-propagation';
 
 type LayersInfoProps = Pick<
   Layer,
   'id' | 'name' | 'format' | 'width' | 'height'
-> & { index: number };
+> & {
+  onDeleteLayer: (id: number) => void;
+};
 
 export const LayerInfo = (props: LayersInfoProps) => {
   const [isOpen, setOpen] = useState(false);
   const toggleOpen = () => setOpen(!isOpen);
-
-  const layers = LayersStore.useStore((state) => state.layers);
-  const removeLayer = LayersStore.useStore((state) => state.removeLayer);
-  const setActiveLayer = LayersStore.useStore((state) => state.setActiveLayer);
-
-  const handleDeleteLayer = () => {
-    const newActiveLayerId = props.index === 0 ? layers[1]?.id : layers[0]?.id;
-    setActiveLayer(newActiveLayerId);
-    removeLayer(props.id);
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={toggleOpen}>
@@ -53,7 +45,7 @@ export const LayerInfo = (props: LayersInfoProps) => {
             {props.height}
           </p>
         </div>
-        <Button onClick={handleDeleteLayer}>
+        <Button onClick={props.onDeleteLayer.bind(null, props.id)}>
           <span className="mr-2">Delete Layer</span>
           <Trash2 size={16} />
         </Button>

@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { actionClient } from '@/lib/safe-action';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/supabase/server';
 
 export const logoutAction = actionClient
   .metadata({ actionName: 'logout' })

@@ -3,13 +3,13 @@
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { loginSchema } from '@/features/auth/login/login-validation';
+import { loginEmailSchema } from '@/features/auth/login/login-email-validation';
 import { actionClient } from '@/lib/safe-action';
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@/supabase/server';
 
 export const loginAction = actionClient
   .metadata({ actionName: 'login' })
-  .schema(loginSchema)
+  .schema(loginEmailSchema)
   .action(async ({ parsedInput }) => {
     const supabase = createClient();
 

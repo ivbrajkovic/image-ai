@@ -16,14 +16,22 @@ import { LayerImage } from '@/features/layers/components/layer-image';
 import { LayerInfo } from '@/features/layers/components/layer-info';
 import { cn } from '@/lib/utils';
 import { ImageStore } from '@/store/image-store';
-import { LayersStore } from '@/store/layers-store';
+import { Layer, LayersStore } from '@/store/layers-store';
 
-export const Layers = () => {
-  const generating = ImageStore.useStore((state) => state.generating);
+type LayersProps = {
+  layers: Layer[] | null;
+};
+
+export const Layers = (props: LayersProps) => {
+  // const layers = props.layers || [];
+
   const layers = LayersStore.useStore((state) => state.layers);
+  const generating = ImageStore.useStore((state) => state.generating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
   const setActiveLayer = LayersStore.useStore((state) => state.setActiveLayer);
   const comparisonMode = LayersStore.useStore((state) => state.comparisonMode);
+
+  const removeLayer = LayersStore.useStore((state) => state.removeLayer);
 
   const comparedLayersId = LayersStore.useStore(
     (state) => state.comparedLayersId,
@@ -32,15 +40,21 @@ export const Layers = () => {
     (state) => state.toggleComparedLayerId,
   );
 
-  const getImageUrl = (id: string) => {
+  const getImageUrl = (id: number) => {
     const layer = layers.find((layer) => layer.id === id);
     return layer?.url || '';
   };
 
-  const handleSetActiveLayer = (layerId: string) => () => {
+  const handleSetActiveLayer = (id: number) => () => {
     if (generating) return;
-    else if (comparisonMode) toggleComparedLayerId(layerId);
-    else setActiveLayer(layerId);
+    else if (comparisonMode) toggleComparedLayerId(id);
+    else setActiveLayer(id);
+  };
+
+  const handleDeleteLayer = (id: number) => {
+    console.log('delete layer');
+    setActiveLayer(0);
+    removeLayer(id);
   };
 
   return (
@@ -90,7 +104,7 @@ export const Layers = () => {
       </CardHeader>
 
       <CardContent className="flex h-0 min-h-full flex-1 flex-col overflow-auto overflow-y-scroll px-2 scrollbar-thin scrollbar-track-secondary scrollbar-thumb-primary scrollbar-track-rounded-full scrollbar-thumb-rounded-full">
-        {layers.map((layer, index) => (
+        {layers.map((layer) => (
           <div
             key={layer.id}
             className={cn(
@@ -122,7 +136,7 @@ export const Layers = () => {
                   format={layer.format}
                   width={layer.width}
                   height={layer.height}
-                  index={index}
+                  onDeleteLayer={handleDeleteLayer}
                 />
               </div>
             </div>

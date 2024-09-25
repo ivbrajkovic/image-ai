@@ -63,12 +63,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <Comp
         disabled={disabled || isLoading}
-        className={cn(buttonVariants({ variant, size, className }))}
+        className={cn(
+          'flex gap-2',
+          buttonVariants({ variant, size, className }),
+        )}
         ref={ref}
         {...props}
       >
         {isLoading ? (
-          <LoadingIcon className="mr-2 size-4 animate-spin" />
+          <LoadingIcon className="size-4 animate-spin" />
         ) : Icon ? (
           <Icon size={16} className="text-secondary-foreground" />
         ) : null}

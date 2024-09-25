@@ -3,30 +3,32 @@ import { immer } from 'zustand/middleware/immer';
 import { createStore } from 'zustand/vanilla';
 
 import { createZustandContext } from '@/store/utils/create-zustand-context';
+import { Tables } from '@/supabase/database.types';
 
-export type Layer = {
-  id: string;
-  publicId?: string;
-  width?: number;
-  height?: number;
-  url?: string;
-  name?: string;
-  format?: string;
-  transcriptionUrl?: string;
-};
+// export type Layer = {
+//   id: number;
+//   width?: number;
+//   height?: number;
+//   url?: string;
+//   name?: string;
+//   format?: string;
+// };
+
+export type Layer = Tables<'layers'>;
+
 export type LayerState = {
   activeLayer: Layer;
   layers: Layer[];
   comparisonMode: boolean;
-  comparedLayersId: string[];
+  comparedLayersId: number[];
 };
 export type LayerActions = {
   addLayer: (layer: Layer) => void;
-  removeLayer: (id: string) => void;
+  removeLayer: (id: number) => void;
   updateLayer: (layer: Layer) => void;
-  setActiveLayer: (id: string) => void;
-  setComparedLayerIds: (ids: string[]) => void;
-  toggleComparedLayerId: (id: string) => void;
+  setActiveLayer: (id: number) => void;
+  setComparedLayerIds: (ids: number[]) => void;
+  toggleComparedLayerId: (id: number) => void;
 };
 
 export type LayerStore = LayerState & LayerActions;

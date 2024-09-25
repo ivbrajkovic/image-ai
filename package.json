@@ -9,7 +9,8 @@
     "ts:check": "tsc --noEmit",
     "lint": "next lint",
     "lint:debug": "eslint ./src --debug",
-    "lint:fix": "eslint ./src --fix"
+    "lint:fix": "eslint ./src --fix",
+    "supabase-types": "pnpm dlx supabase gen types --lang=typescript --project-id 'lhcpdhfqpvoynbkwqked' --schema public > ./src/supabase/database.types.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

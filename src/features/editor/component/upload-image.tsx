@@ -32,7 +32,6 @@ export const UploadImage = () => {
         name: 'Uploading',
         width: 0,
         height: 0,
-        publicId: '',
         format: '',
       });
       setActiveLayer(activeLayer.id);
@@ -48,7 +47,6 @@ export const UploadImage = () => {
       else if (data)
         updateLayer({
           id: activeLayer.id,
-          publicId: data.public_id,
           name: data.original_filename,
           url: data.url,
           width: data.width,

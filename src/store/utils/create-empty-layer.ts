@@ -6,6 +6,5 @@ export const createEmptyLayer = (): Layer => ({
   url: '',
   width: 0,
   height: 0,
-  publicId: '',
   format: '',
 });

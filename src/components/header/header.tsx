@@ -1,3 +1,5 @@
+'use client';
+
 import { Layers as LayersIcon, Paintbrush } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
