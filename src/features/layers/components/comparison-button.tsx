@@ -9,14 +9,12 @@ export const ComparisonButton = () => {
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
   const comparisonMode = LayersStore.useStore((state) => state.comparisonMode);
 
-  const setComparedLayerIds = LayersStore.useStore(
-    (state) => state.setComparedLayerIds,
+  const setComparedLayers = LayersStore.useStore(
+    (state) => state.setComparedLayers,
   );
 
   const handleClick = () =>
-    comparisonMode
-      ? setComparedLayerIds([])
-      : setComparedLayerIds([activeLayer.id]);
+    comparisonMode ? setComparedLayers([]) : setComparedLayers([activeLayer]);
 
   return (
     <Button

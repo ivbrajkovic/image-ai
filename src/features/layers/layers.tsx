@@ -31,19 +31,12 @@ export const Layers = (props: LayersProps) => {
   const setActiveLayer = LayersStore.useStore((state) => state.setActiveLayer);
   const comparisonMode = LayersStore.useStore((state) => state.comparisonMode);
 
-  const removeLayer = LayersStore.useStore((state) => state.removeLayer);
+  // const removeLayer = LayersStore.useStore((state) => state.removeLayer);
 
-  const comparedLayersId = LayersStore.useStore(
-    (state) => state.comparedLayersId,
-  );
+  const comparedLayers = LayersStore.useStore((state) => state.comparedLayers);
   const toggleComparedLayerId = LayersStore.useStore(
-    (state) => state.toggleComparedLayerId,
+    (state) => state.toggleComparedLayer,
   );
-
-  const getImageUrl = (id: number) => {
-    const layer = layers.find((layer) => layer.id === id);
-    return layer?.url || '';
-  };
 
   const handleSetActiveLayer = (layer: Layer) => {
     if (generating) return;
@@ -51,11 +44,7 @@ export const Layers = (props: LayersProps) => {
     else setActiveLayer(layer);
   };
 
-  const handleDeleteLayer = (id: number) => {
-    console.log('delete layer');
-    setActiveLayer(0);
-    removeLayer(id);
-  };
+  const handleDeleteLayer = () => setActiveLayer(layers[0]);
 
   return (
     <Card className="grid h-full max-h-full grid-rows-[auto_1fr_auto] border-0">
@@ -74,15 +63,15 @@ export const Layers = (props: LayersProps) => {
                 alt="compare"
                 width={32}
                 height={32}
-                src={getImageUrl(comparedLayersId[0])}
+                src={comparedLayers[0].url ?? ''}
               />
-              {comparedLayersId.length > 0 ? <ArrowRight /> : null}
-              {comparedLayersId.length > 1 ? (
+              {comparedLayers.length > 0 ? <ArrowRight /> : null}
+              {comparedLayers.length > 1 ? (
                 <Image
                   alt="compare"
                   width={32}
                   height={32}
-                  src={getImageUrl(comparedLayersId[1])}
+                  src={comparedLayers[1].url ?? ''}
                 />
               ) : (
                 'Nothing here'
@@ -112,7 +101,7 @@ export const Layers = (props: LayersProps) => {
               {
                 'animate-pulse': generating,
                 'border-primary': comparisonMode
-                  ? comparedLayersId.includes(layer.id)
+                  ? comparedLayers.some(({ id }) => id === layer.id)
                   : activeLayer.id === layer.id,
               },
             )}

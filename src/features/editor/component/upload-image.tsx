@@ -30,9 +30,6 @@ export const UploadImage = () => {
         id: activeLayer.id,
         url: URL.createObjectURL(acceptedFiles[0]),
         name: 'Uploading',
-        width: 0,
-        height: 0,
-        format: '',
       });
       setActiveLayer(activeLayer);
 

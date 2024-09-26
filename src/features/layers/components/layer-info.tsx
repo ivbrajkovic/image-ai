@@ -1,6 +1,7 @@
 'use client';
 
 import { Ellipsis, Trash2 } from 'lucide-react';
+import { useAction } from 'next-safe-action/hooks';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -11,19 +12,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { deleteLayerAction } from '@/server/delete-layer-action';
 import { Layer } from '@/store/layers-store';
 import { stopPropagation } from '@/utils/stop-propagation';
 
 type LayersInfoProps = Pick<
   Layer,
   'id' | 'name' | 'format' | 'width' | 'height'
-> & {
-  onDeleteLayer: (id: number) => void;
-};
+> & { onDeleteLayer: () => void };
 
 export const LayerInfo = (props: LayersInfoProps) => {
+  const deleteLayer = useAction(deleteLayerAction);
+
   const [isOpen, setOpen] = useState(false);
   const toggleOpen = () => setOpen(!isOpen);
+
+  const handleDeleteLayer = () => {
+    deleteLayer.execute({ id: props.id });
+    props.onDeleteLayer();
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={toggleOpen}>
@@ -45,7 +52,10 @@ export const LayerInfo = (props: LayersInfoProps) => {
             {props.height}
           </p>
         </div>
-        <Button onClick={props.onDeleteLayer.bind(null, props.id)}>
+        <Button
+          isLoading={deleteLayer.isExecuting || deleteLayer.hasSucceeded}
+          onClick={handleDeleteLayer}
+        >
           <span className="mr-2">Delete Layer</span>
           <Trash2 size={16} />
         </Button>

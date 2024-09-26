@@ -66,7 +66,7 @@ export const Header = () => {
                 Layers to help you manage your image edits.
               </SheetDescription>
             </SheetHeader>
-            <Layers />
+            <Layers layers={[]} />
           </SheetContent>
         </Sheet>
       ) : null}

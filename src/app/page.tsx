@@ -4,14 +4,10 @@ import { Editor } from '@/features/editor/editor';
 import { Layers } from '@/features/layers/layers';
 import { Tools } from '@/features/tools/tools';
 import { StoreProvider } from '@/store/store-provider';
-import { createClient } from '@/supabase/server';
+import { getLayers } from '@/supabase/queries/get-laysers';
 
 export default async function Home() {
-  const supabase = createClient();
-  const { data } = await supabase.from('layers').select('*');
-  const layers = data ?? [];
-
-  console.log({ layers });
+  const layers = await getLayers();
 
   return (
     <StoreProvider>

@@ -20,17 +20,16 @@ export type LayerState = {
   activeLayer: Layer;
   layers: Layer[];
   comparisonMode: boolean;
-  comparedLayersId: number[];
+  comparedLayers: Layer[];
 };
 export type LayerActions = {
   addLayer: (layer: Layer) => void;
   removeLayer: (id: number) => void;
-  updateLayer: (layer: Layer) => void;
+  updateLayer: (layer: Partial<Layer>) => void;
   setActiveLayer: (layer: Layer) => void;
-  setComparedLayerIds: (ids: number[]) => void;
-  toggleComparedLayerId: (id: number) => void;
+  setComparedLayers: (layers: Layer[]) => void;
+  toggleComparedLayer: (layer: Layer) => void;
 };
-
 export type LayerStore = LayerState & LayerActions;
 
 const createLayerStore = (initialState: {
@@ -44,7 +43,7 @@ const createLayerStore = (initialState: {
           activeLayer: initialState.layers[0],
           layers: initialState.layers,
           comparisonMode: initialState.layerComparisonMode,
-          comparedLayersId: [],
+          comparedLayers: [],
 
           addLayer: (layer) =>
             set((state) => {
@@ -67,24 +66,24 @@ const createLayerStore = (initialState: {
               state.activeLayer = layer;
             }),
 
-          setComparedLayerIds: (ids) =>
+          setComparedLayers: (layers) =>
             set((state) => {
-              state.comparedLayersId = ids;
-              state.comparisonMode = ids.length > 0;
+              state.comparedLayers = layers;
+              state.comparisonMode = layers.length > 0;
             }),
 
-          toggleComparedLayerId: (id) =>
+          toggleComparedLayer: (layer) =>
             set((state) => {
-              if (state.comparedLayersId.includes(id)) {
-                state.comparedLayersId = state.comparedLayersId.filter(
-                  (layerId) => layerId !== id,
+              if (state.comparedLayers.some(({ id }) => id === layer.id)) {
+                state.comparedLayers = state.comparedLayers.filter(
+                  ({ id }) => id !== layer.id,
                 );
-              } else if (state.comparedLayersId.length < 2) {
-                state.comparedLayersId.push(id);
+              } else if (state.comparedLayers.length < 2) {
+                state.comparedLayers.push(layer);
               } else {
-                state.comparedLayersId[1] = id;
+                state.comparedLayers[1] = layer;
               }
-              state.comparisonMode = state.comparedLayersId.length > 0;
+              state.comparisonMode = state.comparedLayers.length > 0;
             }),
         };
       }),

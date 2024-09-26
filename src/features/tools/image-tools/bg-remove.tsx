@@ -1,6 +1,7 @@
 'use client';
 
 import { Image as ImageIcon } from 'lucide-react';
+import { useAction } from 'next-safe-action/hooks';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -9,15 +10,16 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { ActionButton } from '@/features/tools/components/action-button';
-import { useAddImageLayer } from '@/features/tools/image-tools/hooks/useAddImageLayer';
 import { useToast } from '@/hooks/use-toast';
 import { bgRemove } from '@/server/bg-remove-action';
+import { createLayerAction } from '@/server/create-layer-action';
 import { ImageStore } from '@/store/image-store';
 import { LayersStore } from '@/store/layers-store';
+import { incrementFilenameNumber } from '@/utils/increment-filename-number';
 
 export const BgRemove = () => {
   const { toast } = useToast();
-  const { addImageLayer } = useAddImageLayer();
+  const action = useAction(createLayerAction);
 
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
@@ -38,8 +40,19 @@ export const BgRemove = () => {
         if (response?.serverError) return errorToast(response.serverError);
         if (!response?.data?.url) return errorToast('No image URL received');
 
+        const newName = incrementFilenameNumber(activeLayer.name ?? '');
+
         // TODO: Add layer to supabase and get the id
-        addImageLayer({ url: response.data.url, format: 'png' });
+        // addImageLayer({ url: response.data.url, format: 'png' });
+
+        action.execute({
+          url: response.data.url,
+          name: newName,
+          format: 'png',
+          width: activeLayer.width,
+          height: activeLayer.height,
+          public_id: activeLayer.public_id,
+        });
       })
       .finally(() => setGenerating(false));
   };
