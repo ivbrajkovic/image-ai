@@ -17,15 +17,6 @@ type ActionOptions = {
   errorMessageDescription?: string;
 };
 
-type PerformAction = <
-  TParams extends { url: string },
-  TResponse extends ResponseType,
->(props: {
-  action: (params: TParams) => Promise<TResponse>;
-  params?: Omit<TParams, 'url'>;
-  options: ActionOptions;
-}) => Promise<void>;
-
 export function useLayerAction() {
   const { toast } = useToast();
   const createLayer = useAction(createLayerAction);
@@ -48,16 +39,27 @@ export function useLayerAction() {
     });
   };
 
-  const performAction: PerformAction = ({ action, params, options }) => {
+  const performAction = <
+    TParams extends { url: string; format?: string },
+    TResponse extends ResponseType,
+  >(props: {
+    action: (params: TParams) => Promise<TResponse>;
+    params?: Omit<TParams, 'url' | 'format'>;
+    options: ActionOptions;
+  }) => {
     const getParams = () => {
       const url = ensureValue(activeLayer?.url, 'No active layer URL.');
-      return { ...params, url } as Parameters<typeof action>[0]; // Force type assertion to avoid TS error
+      const format = ensureValue(
+        activeLayer?.format,
+        'No active layer format.',
+      );
+      return { ...props.params, url, format } as TParams;
     };
 
     return Promise.resolve()
       .then(setGenerating.bind(null, true))
       .then(getParams)
-      .then(action)
+      .then(props.action)
       .then<Partial<Layer>>((response) => {
         const { data, serverError } = response ?? {};
         if (serverError) throw new Error(serverError);
@@ -67,7 +69,7 @@ export function useLayerAction() {
           public_id: activeLayer?.public_id,
           url: newUrl,
           name: newName,
-          format: options.imageFormat || activeLayer?.format,
+          format: props.options.imageFormat || activeLayer?.format,
           width: activeLayer?.width,
           height: activeLayer?.height,
         };
@@ -79,7 +81,7 @@ export function useLayerAction() {
         const layer = ensureValue(data?.[0], 'No layer data received');
         setActiveLayer(layer);
       })
-      .catch(handleActionError(options.errorMessageTitle))
+      .catch(handleActionError(props.options.errorMessageTitle))
       .finally(() => setGenerating(false));
   };
 

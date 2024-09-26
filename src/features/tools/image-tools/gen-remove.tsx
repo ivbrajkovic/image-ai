@@ -1,7 +1,6 @@
 'use client';
 
 import { Eraser } from 'lucide-react';
-import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
@@ -13,69 +12,21 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { ActionButton } from '@/features/tools/components/action-button';
-import { useToast } from '@/hooks/use-toast';
-import { createLayerAction } from '@/server/create-layer-action';
+import { useLayerAction } from '@/features/tools/hooks/use-layer-action';
 import { genRemove } from '@/server/gen-remove-action';
-import { ImageStore } from '@/store/image-store';
-import { Layer, LayersStore } from '@/store/layers-store';
-import { ensureValue } from '@/utils/get-or-throw';
-import { incrementFilenameNumber } from '@/utils/increment-filename-number';
 
 type FormValues = { prompt: string };
 
 export const GenRemove = () => {
-  const { toast } = useToast();
-  const createLayer = useAction(createLayerAction);
+  const { activeLayer, performAction } = useLayerAction();
   const form = useForm<FormValues>({ defaultValues: { prompt: '' } });
 
-  const setGenerating = ImageStore.useStore((state) => state.setGenerating);
-  const activeLayer = LayersStore.useStore((state) => state.activeLayer);
-  const setActiveLayer = LayersStore.useStore((state) => state.setActiveLayer);
-
-  const handleActionError = (error: unknown) => {
-    const description =
-      error instanceof Error
-        ? error.message
-        : typeof error === 'string'
-          ? error
-          : 'An error occurred';
-    toast({
-      variant: 'destructive',
-      title: 'Failed to remove content.',
-      description,
+  const handleSubmit = ({ prompt }: FormValues) =>
+    performAction({
+      action: genRemove,
+      params: { prompt },
+      options: { errorMessageTitle: 'Failed to remove content.' },
     });
-  };
-
-  const handleSubmit = ({ prompt }: FormValues) => {
-    const url = ensureValue(activeLayer?.url, 'No active layer URL.');
-    const name = ensureValue(activeLayer?.name, 'No active layer name.');
-    setGenerating(true);
-
-    genRemove({ url, prompt })
-      .then<Partial<Layer>>((response) => {
-        const { data, serverError } = response ?? {};
-        if (serverError) throw new Error(serverError);
-        const newUrl = ensureValue(data?.url, 'No image URL received');
-        const newName = incrementFilenameNumber(name);
-        return {
-          public_id: activeLayer?.public_id,
-          url: newUrl,
-          name: newName,
-          format: activeLayer?.format,
-          width: activeLayer?.width,
-          height: activeLayer?.height,
-        };
-      })
-      .then(createLayer.executeAsync)
-      .then((response) => {
-        const { data, serverError } = response ?? {};
-        if (serverError) throw new Error(serverError);
-        const layer = ensureValue(data?.[0], 'No layer data received');
-        setActiveLayer(layer);
-      })
-      .catch(handleActionError)
-      .finally(setGenerating.bind(null, false));
-  };
 
   if (!activeLayer) return null;
 
