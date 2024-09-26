@@ -7,7 +7,7 @@
  * @returns {string} The updated filename.
  */
 export const incrementFilenameNumber = (
-  fileName: string | null,
+  fileName: string | null | undefined,
   delimiter: string = '',
 ): string => {
   fileName = fileName ?? 'file';

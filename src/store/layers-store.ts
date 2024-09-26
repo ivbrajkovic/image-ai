@@ -8,12 +8,10 @@ import { Tables } from '@/supabase/database.types';
 export type Layer = Tables<'layers'>;
 export type LayerState = {
   activeLayer: Layer | null;
-  layers: Layer[];
   comparisonMode: boolean;
   comparedLayers: Layer[];
 };
 export type LayerActions = {
-  addLayer: (layer: Layer) => void;
   setActiveLayer: (layer: Layer) => void;
   setComparedLayers: (layers: Layer[]) => void;
   toggleComparedLayer: (layer: Layer) => void;
@@ -26,14 +24,8 @@ const createLayerStore = (initialState: { layerComparisonMode: boolean }) => {
       immer((set) => {
         return {
           activeLayer: null,
-          layers: [],
           comparisonMode: initialState.layerComparisonMode,
           comparedLayers: [],
-
-          addLayer: (layer) =>
-            set((state) => {
-              state.layers.push(layer);
-            }),
 
           setActiveLayer: (layer) =>
             set((state) => {
