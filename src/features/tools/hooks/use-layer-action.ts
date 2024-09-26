@@ -2,6 +2,12 @@ import { useAction } from 'next-safe-action/hooks';
 
 import { useToast } from '@/hooks/use-toast';
 import { createLayerAction } from '@/server/create-layer-action';
+import {
+  BgRemoveProps,
+  bgReplaceProps,
+  CartoonifyProps,
+  GenRemoveProps,
+} from '@/services/cloudinary/validations';
 import { ImageStore } from '@/store/image-store';
 import { Layer, LayersStore } from '@/store/layers-store';
 import { ensureValue } from '@/utils/get-or-throw';
@@ -16,6 +22,12 @@ type ActionOptions = {
   errorMessageTitle: string;
   errorMessageDescription?: string;
 };
+
+type PerformActionParams =
+  | GenRemoveProps
+  | BgRemoveProps
+  | bgReplaceProps
+  | CartoonifyProps;
 
 export function useLayerAction() {
   const { toast } = useToast();
@@ -40,7 +52,7 @@ export function useLayerAction() {
   };
 
   const performAction = <
-    TParams extends { url: string; format?: string },
+    TParams extends PerformActionParams,
     TResponse extends ResponseType,
   >(props: {
     action: (params: TParams) => Promise<TResponse>;
