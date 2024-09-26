@@ -16,7 +16,7 @@ export default async function Home() {
         leftSidebar={<Tools />}
         rightSidebar={<Layers layers={layers} />}
       >
-        <Editor layers={layers} />
+        <Editor />
       </AppShell>
     </StoreProvider>
   );

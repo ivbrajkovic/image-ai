@@ -7,15 +7,15 @@ export const useAddImageLayer = () => {
   const setActiveLayer = LayersStore.useStore((state) => state.setActiveLayer);
 
   const addImageLayer = (props: Partial<Layer>) => {
-    if (!activeLayer.name)
-      return console.error('addImageLayer: Active layer name is missing.');
+    if (!activeLayer) throw new Error('No active layer.');
+    if (!activeLayer.name) throw new Error('No active layer name.');
 
-    const newLayerId = crypto.randomUUID();
+    // const newLayerId = crypto.randomUUID();
     const newName = incrementFilenameNumber(activeLayer.name);
     const layer: Layer = {
       ...activeLayer,
       ...props,
-      id: newLayerId,
+      // id: newLayerId,
       name: newName,
     };
     addLayer(layer);

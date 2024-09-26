@@ -30,9 +30,11 @@ export const Cartoonify = () => {
     });
 
   const handleClick = () => {
-    if (!activeLayer.url) throw new Error('No active layer');
-    if (!activeLayer.format) throw new Error('No active layer format');
+    if (!activeLayer) throw new Error('No active layer.');
+    if (!activeLayer.url) throw new Error('No active layer url.');
+    if (!activeLayer.format) throw new Error('No active layer format.');
     setGenerating(true);
+
     cartoonify({ url: activeLayer.url })
       .then((response) => {
         if (response?.serverError) return errorToast(response.serverError);
@@ -41,6 +43,8 @@ export const Cartoonify = () => {
       })
       .finally(() => setGenerating(false));
   };
+
+  if (!activeLayer) return null;
 
   return (
     <Popover>

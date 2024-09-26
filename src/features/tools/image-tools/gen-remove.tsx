@@ -36,7 +36,8 @@ export const GenRemove = () => {
     });
 
   const handleSubmit = ({ prompt }: FormValues) => {
-    if (!activeLayer.url) throw new Error('No active layer');
+    if (!activeLayer) throw new Error('No active layer.');
+    if (!activeLayer.url) throw new Error('No active layer url.');
     setGenerating(true);
 
     genRemove({ prompt, url: activeLayer.url })
@@ -48,6 +49,8 @@ export const GenRemove = () => {
       })
       .finally(() => setGenerating(false));
   };
+
+  if (!activeLayer) return null;
 
   return (
     <Popover>

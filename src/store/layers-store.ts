@@ -17,7 +17,7 @@ import { Tables } from '@/supabase/database.types';
 export type Layer = Tables<'layers'>;
 
 export type LayerState = {
-  activeLayer: Layer;
+  activeLayer: Layer | null;
   layers: Layer[];
   comparisonMode: boolean;
   comparedLayers: Layer[];
@@ -32,16 +32,13 @@ export type LayerActions = {
 };
 export type LayerStore = LayerState & LayerActions;
 
-const createLayerStore = (initialState: {
-  layers: Layer[];
-  layerComparisonMode: boolean;
-}) => {
+const createLayerStore = (initialState: { layerComparisonMode: boolean }) => {
   return createStore<LayerStore>()(
     persist(
       immer((set) => {
         return {
-          activeLayer: initialState.layers[0],
-          layers: initialState.layers,
+          activeLayer: null,
+          layers: [],
           comparisonMode: initialState.layerComparisonMode,
           comparedLayers: [],
 

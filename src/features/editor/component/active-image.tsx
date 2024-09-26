@@ -8,15 +8,15 @@ export const ActiveImage = () => {
   const generating = ImageStore.useStore((state) => state.generating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
 
-  if (!activeLayer.url) return <div>No active layer selected.</div>;
+  if (!activeLayer) return <div>No active layer selected.</div>;
 
   return (
     <div className="h-full bg-secondary p-0 md:p-16">
       <div className="relative flex size-full items-center justify-center">
         <Image
           fill
-          src={activeLayer.url}
-          alt={activeLayer.name!}
+          src={activeLayer.url ?? ''}
+          alt={activeLayer.name ?? ''}
           className={cn(
             'rounded-lg object-contain',
             generating ? 'animate-pulse' : '',

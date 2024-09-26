@@ -22,10 +22,10 @@ type LayersInfoProps = Pick<
 > & { onDeleteLayer: () => void };
 
 export const LayerInfo = (props: LayersInfoProps) => {
-  const deleteLayer = useAction(deleteLayerAction);
-
   const [isOpen, setOpen] = useState(false);
   const toggleOpen = () => setOpen(!isOpen);
+
+  const deleteLayer = useAction(deleteLayerAction);
 
   const handleDeleteLayer = () => {
     deleteLayer.execute({ id: props.id });

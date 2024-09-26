@@ -78,7 +78,7 @@ export const Layers = (props: LayersProps) => {
               )}
             </CardDescription>
           </div>
-        ) : (
+        ) : activeLayer ? (
           <div>
             <CardTitle className="text-sm">
               {activeLayer.name || 'Layers'}
@@ -89,7 +89,7 @@ export const Layers = (props: LayersProps) => {
               </CardDescription>
             ) : null}
           </div>
-        )}
+        ) : null}
       </CardHeader>
 
       <CardContent className="flex h-0 min-h-full flex-1 flex-col overflow-auto overflow-y-scroll px-2 scrollbar-thin scrollbar-track-secondary scrollbar-thumb-primary scrollbar-track-rounded-full scrollbar-thumb-rounded-full">
@@ -102,7 +102,7 @@ export const Layers = (props: LayersProps) => {
                 'animate-pulse': generating,
                 'border-primary': comparisonMode
                   ? comparedLayers.some(({ id }) => id === layer.id)
-                  : activeLayer.id === layer.id,
+                  : activeLayer?.id === layer.id,
               },
             )}
             onClick={handleSetActiveLayer.bind(null, layer)}

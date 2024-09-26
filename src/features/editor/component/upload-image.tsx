@@ -23,7 +23,7 @@ export const UploadImage = () => {
       'image/webp': ['.webp'],
     },
     onDrop: async (acceptedFiles) => {
-      if (!acceptedFiles.length) return;
+      if (!acceptedFiles.length || !activeLayer) return;
 
       setGenerating(true);
       updateLayer({

@@ -1,6 +1,5 @@
 import { Layers2 } from 'lucide-react';
 import { useAction } from 'next-safe-action/hooks';
-import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { createLayerAction } from '@/server/create-layer-action';

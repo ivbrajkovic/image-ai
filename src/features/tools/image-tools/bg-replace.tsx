@@ -36,7 +36,8 @@ export const BgReplace = () => {
     });
 
   const handleSubmit = ({ prompt }: FormValues) => {
-    if (!activeLayer.url) throw new Error('No active layer');
+    if (!activeLayer) throw new Error('No active layer.');
+    if (!activeLayer.url) throw new Error('No active layer url.');
     setGenerating(true);
 
     bgReplace({ prompt, url: activeLayer.url })
@@ -48,6 +49,8 @@ export const BgReplace = () => {
       })
       .finally(() => setGenerating(false));
   };
+
+  if (!activeLayer) return null;
 
   return (
     <Popover>

@@ -14,12 +14,16 @@ export const ComparisonButton = () => {
   );
 
   const handleClick = () =>
-    comparisonMode ? setComparedLayers([]) : setComparedLayers([activeLayer]);
+    comparisonMode
+      ? setComparedLayers([])
+      : activeLayer
+        ? setComparedLayers([activeLayer])
+        : null;
 
   return (
     <Button
       variant={comparisonMode ? 'destructive' : 'outline'}
-      disabled={!activeLayer.url || generating}
+      disabled={!activeLayer?.url || generating}
       icon={Images}
       className="flex w-full gap-4"
       onClick={handleClick}
