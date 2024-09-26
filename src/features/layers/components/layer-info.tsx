@@ -27,8 +27,8 @@ export const LayerInfo = (props: LayersInfoProps) => {
 
   const deleteLayer = useAction(deleteLayerAction);
 
-  const handleDeleteLayer = () => {
-    deleteLayer.execute({ id: props.id });
+  const handleDeleteLayer = async () => {
+    await deleteLayer.executeAsync({ id: props.id });
     props.onDeleteLayer();
   };
 
