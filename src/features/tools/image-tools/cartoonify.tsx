@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { cartoonify } from '@/server/cartoonify-action';
 import { createLayerAction } from '@/server/create-layer-action';
 import { ImageStore } from '@/store/image-store';
-import { LayersStore } from '@/store/layers-store';
+import { Layer, LayersStore } from '@/store/layers-store';
 import { ensureValue } from '@/utils/get-or-throw';
 import { incrementFilenameNumber } from '@/utils/increment-filename-number';
 
@@ -35,7 +35,7 @@ export const Cartoonify = () => {
           : 'An error occurred';
     toast({
       variant: 'destructive',
-      title: 'Failed to remove background',
+      title: 'Failed to cartoonify image.',
       description,
     });
   };
@@ -46,12 +46,19 @@ export const Cartoonify = () => {
     setGenerating(true);
 
     cartoonify({ url })
-      .then((response) => {
+      .then<Partial<Layer>>((response) => {
         const { data, serverError } = response ?? {};
         if (serverError) throw new Error(serverError);
         const newUrl = ensureValue(data?.url, 'No image URL received');
         const newName = incrementFilenameNumber(name);
-        return { url: newUrl, name: newName, format: 'png' };
+        return {
+          public_id: activeLayer?.public_id,
+          url: newUrl,
+          name: newName,
+          format: activeLayer?.format,
+          width: activeLayer?.width,
+          height: activeLayer?.height,
+        };
       })
       .then(createLayer.executeAsync)
       .then((response) => {

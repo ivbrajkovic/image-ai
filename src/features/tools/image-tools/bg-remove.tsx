@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { bgRemove } from '@/server/bg-remove-action';
 import { createLayerAction } from '@/server/create-layer-action';
 import { ImageStore } from '@/store/image-store';
-import { LayersStore } from '@/store/layers-store';
+import { Layer, LayersStore } from '@/store/layers-store';
 import { ensureValue } from '@/utils/get-or-throw';
 import { incrementFilenameNumber } from '@/utils/increment-filename-number';
 
@@ -35,7 +35,7 @@ export const BgRemove = () => {
           : 'An error occurred';
     toast({
       variant: 'destructive',
-      title: 'Failed to remove background',
+      title: 'Failed to remove background.',
       description,
     });
   };
@@ -47,12 +47,19 @@ export const BgRemove = () => {
     setGenerating(true);
 
     bgRemove({ url, format })
-      .then((response) => {
+      .then<Partial<Layer>>((response) => {
         const { data, serverError } = response ?? {};
         if (serverError) throw new Error(serverError);
         const newUrl = ensureValue(data?.url, 'No image URL received');
         const newName = incrementFilenameNumber(name);
-        return { url: newUrl, name: newName, format: 'png' };
+        return {
+          public_id: activeLayer?.public_id,
+          url: newUrl,
+          name: newName,
+          format: 'png',
+          width: activeLayer?.width,
+          height: activeLayer?.height,
+        };
       })
       .then(createLayer.executeAsync)
       .then((response) => {
