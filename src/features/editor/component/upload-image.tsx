@@ -1,17 +1,19 @@
 'use client';
 
+import { useAction } from 'next-safe-action/hooks';
 import { useDropzone } from 'react-dropzone';
 
 import { Card, CardContent } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { updateLayerAction } from '@/server/update-layer-action';
 import { uploadImageAction } from '@/server/upload-image-action';
 import { ImageStore } from '@/store/image-store';
-import { LayersStore } from '@/store/layers-store';
+import { Layer, LayersStore } from '@/store/layers-store';
 
 export const UploadImage = () => {
+  const updateLayer = useAction(updateLayerAction);
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
-  const updateLayer = LayersStore.useStore((state) => state.updateLayer);
   const setActiveLayer = LayersStore.useStore((state) => state.setActiveLayer);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -24,14 +26,12 @@ export const UploadImage = () => {
     },
     onDrop: async (acceptedFiles) => {
       if (!acceptedFiles.length || !activeLayer) return;
-
       setGenerating(true);
-      updateLayer({
-        id: activeLayer.id,
-        url: URL.createObjectURL(acceptedFiles[0]),
-        name: 'Uploading',
-      });
-      setActiveLayer(activeLayer);
+
+      const url = URL.createObjectURL(acceptedFiles[0]);
+      const uploadingLayer: Layer = { ...activeLayer, url, name: 'Uploading' };
+      updateLayer.execute(uploadingLayer);
+      setActiveLayer(uploadingLayer);
 
       const formData = new FormData(); // Server actions require FormData
       formData.append('image', acceptedFiles[0]);
@@ -41,17 +41,20 @@ export const UploadImage = () => {
 
       if (serverError) console.error(serverError);
       else if (validationErrors) console.error(validationErrors);
-      else if (data)
-        updateLayer({
-          id: activeLayer.id,
+      else if (data) {
+        const newActiveLayer: Layer = {
+          ...activeLayer,
           name: data.original_filename,
           url: data.url,
           width: data.width,
           height: data.height,
           format: data.format,
-        });
+          public_id: data.public_id,
+        };
+        updateLayer.execute(newActiveLayer);
+        setActiveLayer(newActiveLayer);
+      }
 
-      setActiveLayer(activeLayer);
       setGenerating(false);
     },
   });

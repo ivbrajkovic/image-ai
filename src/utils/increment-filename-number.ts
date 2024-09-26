@@ -7,9 +7,10 @@
  * @returns {string} The updated filename.
  */
 export const incrementFilenameNumber = (
-  fileName: string,
+  fileName: string | null,
   delimiter: string = '',
 ): string => {
+  fileName = fileName ?? 'file';
   const numberMatch = fileName.match(/(\d+)$/);
   const number = numberMatch ? Number(numberMatch[0]) + 1 : 1;
   const newName = numberMatch

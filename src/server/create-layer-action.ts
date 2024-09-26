@@ -37,7 +37,7 @@ export const createLayerAction = authActionClient
     const { data, error } = await supabase
       .from('layers')
       .insert([{ ...defaultLayer, ...parsedInput, user_id: user.id }])
-      .select('id');
+      .select('*');
 
     if (error) throw new Error('Error creating layer', { cause: error });
 

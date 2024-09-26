@@ -5,17 +5,7 @@ import { createStore } from 'zustand/vanilla';
 import { createZustandContext } from '@/store/utils/create-zustand-context';
 import { Tables } from '@/supabase/database.types';
 
-// export type Layer = {
-//   id: number;
-//   width?: number;
-//   height?: number;
-//   url?: string;
-//   name?: string;
-//   format?: string;
-// };
-
 export type Layer = Tables<'layers'>;
-
 export type LayerState = {
   activeLayer: Layer | null;
   layers: Layer[];
@@ -24,8 +14,6 @@ export type LayerState = {
 };
 export type LayerActions = {
   addLayer: (layer: Layer) => void;
-  removeLayer: (id: number) => void;
-  updateLayer: (layer: Partial<Layer>) => void;
   setActiveLayer: (layer: Layer) => void;
   setComparedLayers: (layers: Layer[]) => void;
   toggleComparedLayer: (layer: Layer) => void;
@@ -45,17 +33,6 @@ const createLayerStore = (initialState: { layerComparisonMode: boolean }) => {
           addLayer: (layer) =>
             set((state) => {
               state.layers.push(layer);
-            }),
-
-          removeLayer: (id) =>
-            set((state) => {
-              state.layers = state.layers.filter((layer) => layer.id !== id);
-            }),
-
-          updateLayer: (layer) =>
-            set((state) => {
-              const index = state.layers.findIndex((l) => l.id === layer.id);
-              if (index !== -1) state.layers[index] = layer;
             }),
 
           setActiveLayer: (layer) =>

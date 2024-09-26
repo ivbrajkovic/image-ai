@@ -15,48 +15,54 @@ import { bgRemove } from '@/server/bg-remove-action';
 import { createLayerAction } from '@/server/create-layer-action';
 import { ImageStore } from '@/store/image-store';
 import { LayersStore } from '@/store/layers-store';
+import { ensureValue } from '@/utils/get-or-throw';
 import { incrementFilenameNumber } from '@/utils/increment-filename-number';
 
 export const BgRemove = () => {
   const { toast } = useToast();
-  const action = useAction(createLayerAction);
+  const createLayer = useAction(createLayerAction);
 
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
+  const setActiveLayer = LayersStore.useStore((state) => state.setActiveLayer);
 
-  const errorToast = (description: string) =>
+  const handleActionError = (error: unknown) => {
+    const description =
+      error instanceof Error
+        ? error.message
+        : typeof error === 'string'
+          ? error
+          : 'An error occurred';
     toast({
       variant: 'destructive',
       title: 'Failed to remove background',
       description,
     });
+  };
 
-  const handleRemove = () => {
-    if (!activeLayer) throw new Error('No active layer.');
-    if (!activeLayer.url) throw new Error('No active layer url.');
-    if (!activeLayer.format) throw new Error('No active layer format.');
+  const handleBackgroundRemove = () => {
+    const url = ensureValue(activeLayer?.url, 'No active layer URL.');
+    const name = ensureValue(activeLayer?.name, 'No active layer name.');
+    const format = ensureValue(activeLayer?.format, 'No active layer format.');
     setGenerating(true);
 
-    bgRemove({ format: activeLayer.format, url: activeLayer.url })
+    bgRemove({ url, format })
       .then((response) => {
-        if (response?.serverError) return errorToast(response.serverError);
-        if (!response?.data?.url) return errorToast('No image URL received');
-
-        const newName = incrementFilenameNumber(activeLayer.name ?? '');
-
-        // TODO: Add layer to supabase and get the id
-        // addImageLayer({ url: response.data.url, format: 'png' });
-
-        action.execute({
-          url: response.data.url,
-          name: newName,
-          format: 'png',
-          width: activeLayer.width,
-          height: activeLayer.height,
-          public_id: activeLayer.public_id,
-        });
+        const { data, serverError } = response ?? {};
+        if (serverError) throw new Error(serverError);
+        const newUrl = ensureValue(data?.url, 'No image URL received');
+        const newName = incrementFilenameNumber(name);
+        return { url: newUrl, name: newName, format: 'png' };
       })
-      .finally(() => setGenerating(false));
+      .then(createLayer.executeAsync)
+      .then((response) => {
+        const { data, serverError } = response ?? {};
+        if (serverError) throw new Error(serverError);
+        if (!data || !data.length) throw new Error('No layer data received');
+        setActiveLayer(data[0]);
+      })
+      .catch(handleActionError)
+      .finally(setGenerating.bind(null, false));
   };
 
   if (!activeLayer) return null;
@@ -76,7 +82,10 @@ export const BgRemove = () => {
             Remove the background from an image using AI
           </p>
         </div>
-        <ActionButton disabled={!activeLayer.url} onClick={handleRemove}>
+        <ActionButton
+          disabled={!activeLayer.url}
+          onClick={handleBackgroundRemove}
+        >
           Remove Background
         </ActionButton>
       </PopoverContent>

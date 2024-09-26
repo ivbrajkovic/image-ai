@@ -1,6 +1,7 @@
 'use client';
 
 import { Image as ImageIcon } from 'lucide-react';
+import { useAction } from 'next-safe-action/hooks';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -9,39 +10,58 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { ActionButton } from '@/features/tools/components/action-button';
-import { useAddImageLayer } from '@/features/tools/image-tools/hooks/useAddImageLayer';
 import { useToast } from '@/hooks/use-toast';
 import { cartoonify } from '@/server/cartoonify-action';
+import { createLayerAction } from '@/server/create-layer-action';
 import { ImageStore } from '@/store/image-store';
 import { LayersStore } from '@/store/layers-store';
+import { ensureValue } from '@/utils/get-or-throw';
+import { incrementFilenameNumber } from '@/utils/increment-filename-number';
 
 export const Cartoonify = () => {
   const { toast } = useToast();
-  const { addImageLayer } = useAddImageLayer();
+  const createLayer = useAction(createLayerAction);
 
   const setGenerating = ImageStore.useStore((state) => state.setGenerating);
   const activeLayer = LayersStore.useStore((state) => state.activeLayer);
+  const setActiveLayer = LayersStore.useStore((state) => state.setActiveLayer);
 
-  const errorToast = (description: string) =>
+  const handleActionError = (error: unknown) => {
+    const description =
+      error instanceof Error
+        ? error.message
+        : typeof error === 'string'
+          ? error
+          : 'An error occurred';
     toast({
       variant: 'destructive',
-      title: 'Failed to cartoonify image',
+      title: 'Failed to remove background',
       description,
     });
+  };
 
-  const handleClick = () => {
-    if (!activeLayer) throw new Error('No active layer.');
-    if (!activeLayer.url) throw new Error('No active layer url.');
-    if (!activeLayer.format) throw new Error('No active layer format.');
+  const handleCartoonify = () => {
+    const url = ensureValue(activeLayer?.url, 'No active layer URL.');
+    const name = ensureValue(activeLayer?.name, 'No active layer name.');
     setGenerating(true);
 
-    cartoonify({ url: activeLayer.url })
+    cartoonify({ url })
       .then((response) => {
-        if (response?.serverError) return errorToast(response.serverError);
-        if (!response?.data?.url) return errorToast('No image URL received');
-        addImageLayer({ url: response.data.url, format: 'png' });
+        const { data, serverError } = response ?? {};
+        if (serverError) throw new Error(serverError);
+        const newUrl = ensureValue(data?.url, 'No image URL received');
+        const newName = incrementFilenameNumber(name);
+        return { url: newUrl, name: newName, format: 'png' };
       })
-      .finally(() => setGenerating(false));
+      .then(createLayer.executeAsync)
+      .then((response) => {
+        const { data, serverError } = response ?? {};
+        if (serverError) throw new Error(serverError);
+        const layer = ensureValue(data?.[0], 'No layer data received');
+        setActiveLayer(layer);
+      })
+      .catch(handleActionError)
+      .finally(setGenerating.bind(null, false));
   };
 
   if (!activeLayer) return null;
@@ -61,7 +81,7 @@ export const Cartoonify = () => {
             Convert the image into a cartoon.
           </p>
         </div>
-        <ActionButton disabled={!activeLayer.url} onClick={handleClick}>
+        <ActionButton disabled={!activeLayer.url} onClick={handleCartoonify}>
           Cartoonify Image
         </ActionButton>
       </PopoverContent>

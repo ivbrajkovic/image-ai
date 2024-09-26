@@ -8,6 +8,7 @@ import { createClient } from '@/supabase/server';
 
 // create sod schema based on the Update type
 const schema = z.object({
+  id: z.number(),
   public_id: z.string().nullable().optional(),
   url: z.string().nullable().optional(),
   name: z.string().nullable().optional(),
@@ -21,16 +22,15 @@ export const updateLayerAction = authActionClient
     actionName: 'updateLayer',
   })
   .schema(schema)
-  .action(async ({ parsedInput, ctx: { user } }) => {
+  .action(async ({ parsedInput: { id, ...other } }) => {
     const supabase = createClient();
 
-    const { data, error } = await supabase
+    const { error } = await supabase //
       .from('layers')
-      .update({ ...parsedInput, user_id: user.id })
-      .select('id');
+      .update(other)
+      .eq('id', id);
 
     if (error) throw new Error('Error updating layer', { cause: error });
 
     revalidatePath('/');
-    return data;
   });
